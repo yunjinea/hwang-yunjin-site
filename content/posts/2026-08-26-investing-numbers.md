@@ -5,7 +5,7 @@ category: "investing"
 category_label: "COMPANY ANALYSIS"
 read_time: "7 MIN READ"
 excerpt: "주가보다 먼저 매출, 이익, 현금흐름과 변화의 원인을 확인하는 투자 체크리스트입니다."
-draft: false
+draft: true
 ---
 # 기업 실적을 볼 때 먼저 확인하는 숫자
 
