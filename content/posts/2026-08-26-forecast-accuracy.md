@@ -5,7 +5,7 @@ category: "work"
 category_label: "BUSINESS ANALYSIS"
 read_time: "8 MIN READ"
 excerpt: "Forecast 오차를 판매·생산·재고·원가 연결의 문제로 바라봅니다."
-draft: false
+draft: true
 ---
 # 손익 Forecast는 왜 실제와 달라지는가
 
