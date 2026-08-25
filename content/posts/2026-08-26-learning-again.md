@@ -5,7 +5,7 @@ category: "life"
 category_label: "LEARNING"
 read_time: "5 MIN READ"
 excerpt: "일과 가족 사이에서 다시 공부를 시작하며 만든 작은 원칙들을 기록합니다."
-draft: false
+draft: true
 ---
 # 직장인이 다시 공부를 시작하면서
 
