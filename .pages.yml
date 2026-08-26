@@ -1,0 +1,77 @@
+media:
+  input: uploads
+  output: /uploads
+
+content:
+  - name: writing
+    label: Writing
+    type: collection
+    path: content/posts
+    format: yaml-frontmatter
+
+    filename:
+      template: "{year}-{month}-{day}-{primary}.md"
+      field: create
+
+    view:
+      fields: [title, category, date, draft]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+
+    fields:
+      - name: title
+        label: 제목
+        type: string
+
+      - name: date
+        label: 발행일
+        type: date
+        options:
+          time: false
+          format: yyyy-MM-dd
+
+      - name: category
+        label: 카테고리
+        type: select
+        options:
+          values:
+            - name: work
+              label: 업무 / WORK
+            - name: investing
+              label: 투자 / INVESTING
+            - name: life
+              label: 개인 일상 / LIFE
+
+      - name: category_label
+        label: 세부 라벨
+        type: string
+
+      - name: read_time
+        label: 읽기 시간
+        type: string
+        default: "5 MIN READ"
+
+      - name: excerpt
+        label: 요약
+        type: text
+
+      - name: draft
+        label: 임시저장
+        type: boolean
+        default: true
+
+      - name: body
+        label: 본문
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+
+settings:
+  commit:
+    templates:
+      create: "Writing: create {filename}"
+      update: "Writing: update {filename}"
