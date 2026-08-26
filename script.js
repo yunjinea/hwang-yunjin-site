@@ -96,12 +96,6 @@ const expRows=qsa('.expertise-row');const expNum=qs('#expertise-num');const expT
 function setExpertise(i){const d=expertiseData[i];expNum.textContent=d.num;expTitle.innerHTML=d.title;expList.innerHTML=d.items.map(x=>`<li>${x}</li>`).join('');expRows.forEach((r,j)=>r.classList.toggle('active',i===j))}
 expRows.forEach((r,i)=>{r.addEventListener('mouseenter',()=>setExpertise(i));r.addEventListener('focus',()=>setExpertise(i));r.addEventListener('click',()=>setExpertise(i))});
 
-// Contact placeholder.
-const dialog=qs('#contact-dialog');
-qs('#contact-button').addEventListener('click',()=>dialog.showModal());
-qs('.dialog-close').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',(e)=>{if(e.target===dialog)dialog.close()});
-
 
 // B3.3.1 — Mobile scroll motion.
 // Desktop keeps hover/in-view behavior. Mobile gets explicit scroll-driven states.
