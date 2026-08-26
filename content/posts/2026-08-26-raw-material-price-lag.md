@@ -1,12 +1,13 @@
 ---
-title: "원재료 가격이 올랐는데, 왜 손익은 바로 나빠지지 않을까"
-date: "2026-08-26"
-category: "work"
-category_label: "MANAGEMENT ACCOUNTING"
-read_time: "12 MIN READ"
+title: 원재료 가격이 올랐는데, 왜 손익은 바로 나빠지지 않을까
+date: 2026-08-26
+category: work
+category_label: MANAGEMENT ACCOUNTING
+read_time: 12 MIN READ
+excerpt: 원재료 시장가격의 변화가 이동평균단가와 재고 수불을 거쳐 손익에 반영되기까지의 시차, 그리고 그 흐름이 재고 보유 의사결정에
+  어떤 의미를 갖는지 정리합니다.
+draft: false
 article_index: "02"
-excerpt: "원재료 시장가격의 변화가 이동평균단가와 재고 수불을 거쳐 손익에 반영되기까지의 시차, 그리고 그 흐름이 재고 보유 의사결정에 어떤 의미를 갖는지 정리합니다."
-draft: true
 ---
 # 원재료 가격이 올랐는데, 왜 손익은 바로 나빠지지 않을까
 
