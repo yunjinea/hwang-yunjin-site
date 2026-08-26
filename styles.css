@@ -740,3 +740,31 @@
 }
 
 a.post-row{color:inherit;text-decoration:none}a.post-row:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+
+/* B4.0.2 — Writing operational empty state */
+.writing-empty{
+  min-height:182px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:10px;
+  padding:34px 0;
+  color:var(--muted);
+}
+.writing-empty b{
+  font-size:10px;
+  letter-spacing:.12em;
+  color:var(--blue);
+}
+.writing-empty p{
+  margin:0;
+  font-family:var(--kr);
+  font-size:14px;
+  line-height:1.7;
+  word-break:keep-all;
+}
+@media(max-width:760px){
+  .writing-empty{min-height:150px;padding:28px 0}
+  .writing-empty p{font-size:13px}
+}

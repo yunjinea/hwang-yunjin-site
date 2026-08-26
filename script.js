@@ -274,7 +274,7 @@ function renderStory(panel,index,{pulse=true}={}){
   }
 }
 
-storyPanels.forEach(p=>renderStory(p,0,{pulse:false}));
+// Initial story rendering is deferred until rail helpers are initialized.
 
 // Keep direct Forecast hover/click selection synchronized with the wheel story state.
 forecastSteps.forEach((step,i)=>{
@@ -315,7 +315,7 @@ function syncActivePanel(){
 window.addEventListener('scroll',syncActivePanel,{passive:true});
 window.addEventListener('resize',syncActivePanel,{passive:true});
 desktopStoryMQ.addEventListener?.('change',syncActivePanel);
-syncActivePanel();
+// Initial sync is deferred until rail helpers are initialized.
 
 function scrollStoryTarget(target){
   if(!target)return;
@@ -551,6 +551,10 @@ function requestRailMotion(){
 
 window.addEventListener('scroll',requestRailMotion,{passive:true});
 window.addEventListener('resize',requestRailMotion,{passive:true});
+
+// Rail state is initialized now, so story rendering is safe.
+storyPanels.forEach(p=>renderStory(p,0,{pulse:false}));
+syncActivePanel();
 requestRailMotion();
 
 
@@ -654,8 +658,8 @@ function renderWritingTopic(key,{focus=false}={}){
     writingDescription.textContent=d.description;
     writingQuote.innerHTML=d.quote;
 
-    writingPostList.innerHTML=d.posts.map((post,i)=>`
-      <a class="post-row" style="--row-index:${i}" href="${post.url || '#writing'}">
+    writingPostList.innerHTML=d.posts.length ? d.posts.map((post,i)=>`
+      <a class="post-row" style="--row-index:${i}" href="${post.url}">
         <span class="post-num nowrap">${String(i+1).padStart(2,'0')}</span>
         <div>
           <small>${post.category}</small>
@@ -664,7 +668,11 @@ function renderWritingTopic(key,{focus=false}={}){
         <span class="read-time nowrap">${post.time}</span>
         ${writingPreview(post.preview,i)}
       </a>
-    `).join('');
+    `).join('') : `
+      <div class="writing-empty">
+        <b>NO PUBLISHED STORIES YET</b>
+        <p>아직 공개된 글이 없습니다. 새 글을 발행하면 이곳에 표시됩니다.</p>
+      </div>`;
 
     requestAnimationFrame(()=>{
       writingPanel.classList.remove('switching');
@@ -692,5 +700,5 @@ writingTopics.forEach(btn=>{
 renderWritingTopic('work');
 
 function normalizePublishedPost(p){return{category:p.category_label||({work:'WORK',investing:'INVESTING',life:'LIFE'}[p.category]||'WRITING'),title:p.title,time:p.read_time||'',preview:p.category==='investing'?'invest':p.category==='life'?'life':'work',url:p.url,excerpt:p.excerpt||''}}
-async function loadPublishedWriting(){try{const r=await fetch('/writing/index.json',{cache:'no-store'});if(!r.ok)return;const posts=await r.json();['work','investing','life'].forEach(k=>{const f=posts.filter(p=>p.category===k).map(normalizePublishedPost);if(f.length)writingData[k].posts=f});renderWritingTopic(activeWritingTopic)}catch(e){console.warn('Writing index fallback',e)}}
+async function loadPublishedWriting(){try{const r=await fetch('/writing/index.json',{cache:'no-store'});if(!r.ok)return;const posts=await r.json();['work','investing','life'].forEach(k=>{const f=posts.filter(p=>p.category===k).map(normalizePublishedPost);writingData[k].posts=f});renderWritingTopic(activeWritingTopic)}catch(e){console.warn('Writing index fallback',e)}}
 loadPublishedWriting();
