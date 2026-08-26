@@ -1,11 +1,11 @@
 ---
-title: "손익 Forecast는 왜 실제와 달라지는가"
-date: "2026-08-26"
-category: "work"
-category_label: "BUSINESS ANALYSIS"
-read_time: "10 MIN READ"
-excerpt: "미래의 숫자를 맞히는 일보다, 판매·생산·재고·원가가 손익으로 이어지는 흐름을 이해하는 일이 Forecast의 본질에 더 가깝다고 생각합니다."
-draft: true
+title: 손익 Forecast는 왜 실제와 달라지는가
+date: 2026-08-26
+category: work
+category_label: BUSINESS ANALYSIS
+read_time: 10 MIN READ
+excerpt: 미래의 숫자를 맞히는 일보다, 판매·생산·재고·원가가 손익으로 이어지는 흐름을 이해하는 일이 Forecast의 본질에 더 가깝다고 생각합니다.
+draft: false
 ---
 # 손익 Forecast는 왜 실제와 달라지는가
 
