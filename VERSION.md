@@ -10,7 +10,7 @@
 - Selected Cases Intro: SEE → EXPLAIN → DECIDE → CONTROL 순차 등장
 - Cases 01~04: 각기 다른 one-time motion language
 - Expertise: 모바일 01~05 개별 scene
-- Writing: 모바일 normal flow, CMS empty-state 지원
+- Writing: 모바일 normal flow, CMS empty-state 지원 / 대표 문구 제거 및 상단 여백 축소
 - About: 불필요한 긴 모바일 runway 제거
 - Reduced Motion 대응 유지
 

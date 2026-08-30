@@ -4295,3 +4295,11 @@ html.b43-pinned-story body{overflow-x:hidden}
     .cases-intro.v1-cases-intro .v1-cases-word{opacity:1!important;transform:none!important;transition:none!important}
   }
 }
+
+
+/* VERSION 1 — Writing intro simplification */
+@media(max-width:760px){
+  #writing .writing-browser{margin-top:30px!important}
+  #writing .writing-intro .section-sub{margin-top:12px!important}
+  #writing .writing-description{margin-top:10px!important}
+}
