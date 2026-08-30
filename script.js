@@ -1,3 +1,11 @@
+/*
+ * AFTER THE NUMBERS — VERSION 1
+ * Front-end baseline: 2026-08-30
+ *
+ * Stable desktop engine + mobile Career scroll story
+ * Mobile Cases and Expertise have dedicated one-time motion systems
+ * Writing uses normal flow on mobile
+ */
 
 const qs=(s,ctx=document)=>ctx.querySelector(s);
 const qsa=(s,ctx=document)=>[...ctx.querySelectorAll(s)];
@@ -44,6 +52,7 @@ const careerBar=qs('#career-progress-bar');
 let careerIndex=-1;
 function careerStepFromProgress(p){if(p<.40)return 0;if(p<.65)return 1;if(p<.85)return 2;return 3}
 function updateCareer(){
+  return; // B4.3 pinned career owns motion
   if(innerWidth<=760)return;
   const r=careerSection.getBoundingClientRect();
   const total=Math.max(1,careerSection.querySelector('.career-scroll').offsetHeight-innerHeight);
@@ -99,7 +108,7 @@ expRows.forEach((r,i)=>{r.addEventListener('mouseenter',()=>setExpertise(i));r.a
 
 // B3.3.1 — Mobile scroll motion.
 // Desktop keeps hover/in-view behavior. Mobile gets explicit scroll-driven states.
-const mobileCaseMQ=window.matchMedia('(max-width:760px)');
+const mobileCaseMQ=window.matchMedia('(max-width:0px)'); // B4.3 disabled
 const clamp01=n=>Math.max(0,Math.min(1,n));
 function mobileSectionProgress(el){
   if(!el)return 0;
@@ -186,7 +195,7 @@ requestMobileMotion();
 // =========================================================
 // B3.4 — DESKTOP SCROLL-DIRECTED CASE STORY
 // =========================================================
-const desktopStoryMQ=window.matchMedia('(min-width:761px)');
+const desktopStoryMQ=window.matchMedia('(min-width:99999px)'); // B4.3 disabled
 const reduceMotionMQ=window.matchMedia('(prefers-reduced-motion: reduce)');
 const storyPanels=qsa('.case-panel[data-story-count]');
 const profitabilityCols=qsa('#case-profitability .bridge-col');
@@ -431,22 +440,7 @@ function morphHeroSeries(nextPoints,duration=1750){
   requestAnimationFrame(frame);
 }
 
-if(!reduceMotionMQ.matches){
-  setInterval(()=>{
-    const hr=qs('#intro')?.getBoundingClientRect();
-    if(!hr || hr.bottom<0 || hr.top>innerHeight || heroMorphRunning)return;
-    heroSeriesIndex=(heroSeriesIndex+1)%heroSeries.length;
-    morphHeroSeries(heroSeries[heroSeriesIndex],1750);
-  },2350);
-
-  let verbIndex=2;
-  setInterval(()=>{
-    const hr=qs('#intro')?.getBoundingClientRect();
-    if(!hr || hr.bottom<0 || hr.top>innerHeight)return;
-    verbIndex=(verbIndex+1)%heroVerbs.length;
-    heroVerbs.forEach((v,i)=>v.classList.toggle('active',i===verbIndex));
-  },1900);
-}
+// B4.1.1: automatic Hero morph / verb cycling disabled; scroll controls the scene.
 
 
 
@@ -565,6 +559,7 @@ const writingKicker=qs('#writing-kicker');
 const writingCount=qs('#writing-count');
 const writingDescription=qs('#writing-description');
 const writingQuote=qs('#writing-quote-text');
+const writingViewAll=qs('#writing-view-all');
 
 const writingData={
   work:{
@@ -648,12 +643,19 @@ function renderWritingTopic(key,{focus=false}={}){
   writingSwitchTimer=setTimeout(()=>{
     writingTitle.textContent=d.title;
     writingKicker.textContent=d.kicker;
-    writingCount.textContent=`${String(d.posts.length).padStart(2,'0')} STORIES`;
+    const totalCount=Number.isFinite(d.totalCount)?d.totalCount:d.posts.length;
+    const homePosts=d.posts.slice(0,3);
+    writingCount.textContent=`${String(totalCount).padStart(2,'0')} STORIES`;
     writingDescription.textContent=d.description;
     writingQuote.innerHTML=d.quote;
+    if(writingViewAll){
+      writingViewAll.href=`/writing/?category=${encodeURIComponent(key)}`;
+      writingViewAll.innerHTML=`VIEW ALL ${String(totalCount).padStart(2,'0')} STORIES <span>→</span>`;
+      writingViewAll.hidden=totalCount===0;
+    }
 
-    writingPostList.innerHTML=d.posts.length ? d.posts.map((post,i)=>`
-      <a class="post-row" style="--row-index:${i}" href="${post.url}">
+    writingPostList.innerHTML=homePosts.length ? homePosts.map((post,i)=>`
+      <a class="post-row" style="--row-index:${i}" href="${post.url||'#writing'}">
         <span class="post-num nowrap">${String(i+1).padStart(2,'0')}</span>
         <div>
           <small>${post.category}</small>
@@ -691,8 +693,629 @@ writingTopics.forEach(btn=>{
   });
 });
 
+Object.values(writingData).forEach(d=>{d.posts=[];d.totalCount=0});
 renderWritingTopic('work');
 
 function normalizePublishedPost(p){return{category:p.category_label||({work:'WORK',investing:'INVESTING',life:'LIFE'}[p.category]||'WRITING'),title:p.title,time:p.read_time||'',preview:p.category==='investing'?'invest':p.category==='life'?'life':'work',url:p.url,excerpt:p.excerpt||''}}
-async function loadPublishedWriting(){try{const r=await fetch('/writing/index.json',{cache:'no-store'});if(!r.ok)return;const posts=await r.json();['work','investing','life'].forEach(k=>{const f=posts.filter(p=>p.category===k).map(normalizePublishedPost);writingData[k].posts=f});renderWritingTopic(activeWritingTopic)}catch(e){console.warn('Writing index fallback',e)}}
+async function loadPublishedWriting(){try{const r=await fetch('/writing/index.json',{cache:'no-store'});if(!r.ok)throw new Error('Writing index unavailable');const posts=await r.json();['work','investing','life'].forEach(k=>{const f=posts.filter(p=>p.category===k).map(normalizePublishedPost);writingData[k].posts=f;writingData[k].totalCount=f.length});renderWritingTopic(activeWritingTopic)}catch(e){['work','investing','life'].forEach(k=>{writingData[k].posts=[];writingData[k].totalCount=0});renderWritingTopic(activeWritingTopic);console.warn('Writing index unavailable — empty state shown')}}
 loadPublishedWriting();
+
+
+
+
+
+// =========================================================
+// B5.0 — AUTO CINEMATIC HERO
+// One entrance sequence. Scroll no longer controls Hero animation.
+// =========================================================
+const heroStorySection=qs('.hero-story');
+const heroStickyScene=qs('.hero-story .hero-sticky');
+
+function startHeroAutoMotion(){
+  if(!heroStorySection)return;
+  if(reduceMotionMQ.matches){
+    heroStorySection.classList.add('hero-auto');
+    return;
+  }
+  // Wait one frame so the hidden initial state is painted first.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>heroStorySection.classList.add('hero-auto')));
+}
+startHeroAutoMotion();
+
+// =========================================================
+// B4.3 — PINNED CHAPTER MOTION SYSTEM
+// Each chapter remains visually fixed while scroll advances its scene.
+// =========================================================
+document.documentElement.classList.add('b43-pinned-story');
+
+const c43=n=>Math.max(0,Math.min(1,n));
+const e43=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const r43=(p,a,b)=>e43(c43((p-a)/Math.max(.0001,b-a)));
+
+function sectionPinProgress(el){
+  if(!el)return 0;
+  const r=el.getBoundingClientRect();
+  return c43(-r.top/Math.max(1,el.offsetHeight-innerHeight));
+}
+function reveal43(el,p,{x=0,y=22,scale=.985,min=.04}={}){
+  if(!el)return;
+  const q=e43(c43(p));
+  el.style.opacity=String(min+(1-min)*q);
+  el.style.transform=`translate3d(${((1-q)*x).toFixed(1)}px,${((1-q)*y).toFixed(1)}px,0) scale(${(scale+(1-scale)*q).toFixed(4)})`;
+}
+function plateau43(p,a,b,fade=.05){
+  if(p<a-fade||p>b+fade)return 0;
+  const enter=a<=0?1:r43(p,a-fade,a+fade);
+  const leave=b>=1?0:r43(p,b-fade,b+fade);
+  return c43(enter*(1-leave));
+}
+
+/* ---------- Career impact UI ---------- */
+let careerImpact=qs('.career-impact');
+if(!careerImpact && qs('.career-sticky')){
+  careerImpact=document.createElement('div');
+  careerImpact.className='career-impact';
+  careerImpact.innerHTML='<span>01 / 04 · CURRENT</span><strong>BUSINESS<br>ANALYSIS</strong><i></i>';
+  qs('.career-sticky').appendChild(careerImpact);
+}
+const careerImpactMeta=qs('span',careerImpact);
+const careerImpactWord=qs('strong',careerImpact);
+
+const careerScenes=[
+  {a:0,b:.38,label:'01 / 04 · CURRENT',word:'BUSINESS<br>ANALYSIS'},
+  {a:.38,b:.61,label:'02 / 04 · 2022—2025',word:'PLAN · COST<br>PERFORMANCE'},
+  {a:.61,b:.82,label:'03 / 04 · 2018—2022',word:'PROJECT<br>PROFITABILITY'},
+  {a:.82,b:1,label:'04 / 04 · FOUNDATION',word:'SALES<br>SUPPORT'}
+];
+
+function career43(){
+  const scroll=qs('#career .career-scroll');
+  if(!scroll)return;
+  const p=sectionPinProgress(scroll);
+  let best=0,bestW=-1;
+
+  careerScenes.forEach((scene,i)=>{
+    const w=plateau43(p,scene.a,scene.b,.035);
+    if(w>bestW){bestW=w;best=i}
+    const role=careerRoles[i];
+    if(!role)return;
+
+    role.classList.toggle('active',i===best);
+    role.style.opacity=String(w);
+    role.style.pointerEvents=w>.58?'auto':'none';
+    role.style.transform=`translate3d(${((1-w)*(i%2?26:-20)).toFixed(1)}px,${((1-w)*24).toFixed(1)}px,0) scale(${(.982+.018*w).toFixed(4)})`;
+
+    const year=qs('.career-role-year',role);
+    if(year){
+      const local=c43((p-scene.a)/Math.max(.001,scene.b-scene.a));
+      year.style.transform=`translate3d(${(-18+36*local).toFixed(1)}px,${(-18*local).toFixed(1)}px,0) scale(${(.92+.10*local).toFixed(3)})`;
+      year.style.opacity=String(.025+.05*w);
+    }
+
+    const elements=[
+      qs('.period',role),qs('.company-type',role),qs('h3',role),
+      qs('.role',role),qs('.tags',role),qs('.career-desc',role)
+    ].filter(Boolean);
+    const local=c43((p-scene.a)/Math.max(.001,scene.b-scene.a));
+    elements.forEach((el,j)=>reveal43(el,r43(local,.02+j*.045,.20+j*.045),{y:18,min:.03}));
+
+    qsa('.selected-work article,.role-points span',role).forEach((el,j)=>{
+      reveal43(el,r43(local,.40+j*.065,.58+j*.065),{y:13,min:.06});
+    });
+    const endmark=qs('.career-endmark',role);
+    if(endmark)reveal43(endmark,r43(local,.48,.72),{y:14,min:.06});
+  });
+
+  careerYears.forEach((el,i)=>{
+    const on=i===best;
+    el.classList.toggle('active',on);
+    el.style.opacity=on?'1':'.43';
+  });
+  if(careerBar)careerBar.style.width=`${(p*100).toFixed(1)}%`;
+
+  const sc=careerScenes[best];
+  if(careerImpactMeta)careerImpactMeta.textContent=sc.label;
+  if(careerImpactWord)careerImpactWord.innerHTML=sc.word;
+  if(careerImpact)careerImpact.style.setProperty('--career-scene-progress',String(c43((p-sc.a)/Math.max(.001,sc.b-sc.a))));
+
+  const side=qs('#career .career-side h2');
+  if(side){
+    const fade=r43(p,.10,.26);
+    side.style.opacity=String(1-.64*fade);
+    side.style.transform=`translate3d(0,${(-9*fade).toFixed(1)}px,0)`;
+  }
+}
+
+/* ---------- Cases intro ---------- */
+function casesIntro43(){
+  const runway=qs('.cases-intro-runway');
+  const intro=qs('.cases-intro');
+  if(!runway||!intro)return;
+  const p=sectionPinProgress(runway);
+  const left=qsa('.cases-intro-copy > *',intro);
+  left.forEach((el,i)=>reveal43(el,r43(p,.03+i*.06,.22+i*.06),{y:28,min:.04}));
+  qsa('.case-index a',intro).forEach((el,i)=>{
+    reveal43(el,r43(p,.28+i*.09,.48+i*.09),{x:18,y:0,min:.04});
+  });
+}
+
+/* ---------- Case pinned scenes ---------- */
+function forecast43(panel,p){
+  const story=r43(p,.22,.88);
+  const idx=Math.min(forecastSteps.length-1,Math.floor(story*forecastSteps.length));
+  setForecastStep(idx);
+  const track=qs('.forecast-track',panel);
+  if(track){
+    track.style.transformOrigin='left center';
+    track.style.transform=`scaleX(${story.toFixed(3)})`;
+  }
+  forecastSteps.forEach((step,i)=>{
+    const q=r43(story,(i-.35)/forecastSteps.length,(i+.75)/forecastSteps.length);
+    const current=i===idx;
+    step.style.opacity=String(current?1:.22+.55*q);
+    step.style.transform=`translate3d(0,${current?-8:(8-8*q)}px,0)`;
+  });
+  if(inventory){
+    const q=r43(story,.36,.62);
+    inventory.style.opacity=String(.08+.92*q);
+    inventory.style.transform=`translate3d(0,${((1-q)*15).toFixed(1)}px,0)`;
+  }
+  qsa('.forecast-live-bars i',panel).forEach((bar,i)=>{
+    const q=r43(story,.48+i*.035,.65+i*.035);
+    bar.style.transform=`scaleY(${(.12+.88*q).toFixed(3)})`;
+    bar.style.transformOrigin='bottom';
+    bar.style.opacity=String(.16+.84*q);
+  });
+}
+function bridge43(panel,p){
+  qsa('.bridge-col',panel).forEach((col,i)=>{
+    const q=r43(p,.25+i*.075,.44+i*.075);
+    const bar=qs('i',col),value=qs('.bridge-value',col);
+    if(bar){bar.style.transform=`scaleY(${(.05+.95*q).toFixed(3)})`;bar.style.opacity=String(.12+.80*q)}
+    if(value){value.style.opacity=String(.10+.90*q);value.style.transform=`translateY(${((1-q)*11).toFixed(1)}px)`}
+  });
+}
+function investment43(panel,p){
+  const nodes=qsa('.decision-flow>div',panel);
+  const arrows=qsa('.decision-flow>i',panel);
+  nodes.forEach((node,i)=>{
+    const q=r43(p,.22+i*.10,.39+i*.10);
+    reveal43(node,q,{y:20,scale:.96,min:.08});
+  });
+  arrows.forEach((a,i)=>{
+    const q=r43(p,.29+i*.10,.43+i*.10);
+    a.style.opacity=String(.08+.92*q);
+    a.style.transform=`scaleY(${(.2+.8*q).toFixed(3)})`;
+  });
+  const orbit=qs('.decision-orbit',panel);
+  if(orbit){
+    const q=r43(p,.52,.86);
+    orbit.style.opacity=String(.10+.90*q);
+    orbit.style.transform=`rotate(${(-20+46*q).toFixed(1)}deg) scale(${(.88+.12*q).toFixed(3)})`;
+  }
+}
+function budget43(panel,p){
+  const pts=qsa('.budget-point',panel);
+  pts.forEach((pt,i)=>{
+    const q=r43(p,.28+i*.18,.47+i*.18);
+    reveal43(pt,q,{y:18,scale:.96,min:.08});
+  });
+  const over=r43(p,.65,.87);
+  if(budgetStatus)budgetStatus.textContent=over>.55?'OVER BUDGET':'CONTROL RANGE';
+  if(budgetAlert){
+    budgetAlert.style.opacity=String(over);
+    budgetAlert.style.transform=`translate3d(0,${((1-over)*15).toFixed(1)}px,0)`;
+  }
+}
+function cases43(){
+  casesIntro43();
+  storyPanels.forEach(panel=>{
+    const p=sectionPinProgress(panel);
+    const copy=qs('.case-copy',panel), visual=qs('.case-visual',panel);
+    reveal43(copy,r43(p,.03,.20),{x:-18,y:12,min:.04});
+    reveal43(visual,r43(p,.11,.31),{x:20,y:12,min:.04});
+
+    if(panel.id==='case-forecast')forecast43(panel,p);
+    if(panel.id==='case-profitability')bridge43(panel,p);
+    if(panel.id==='case-investment')investment43(panel,p);
+    if(panel.id==='case-budget')budget43(panel,p);
+  });
+}
+
+/* ---------- Expertise: richer content + 5 complete beats ---------- */
+const expertiseRich=[
+  {
+    question:'앞으로 어떤 숫자가 만들어질 것인가?',
+    desc:'사업계획과 Rolling Forecast를 통해 판매·생산·재고·원가의 흐름을 하나의 손익 전망으로 연결합니다.'
+  },
+  {
+    question:'계획과 실제 사이에서 무엇이 달라졌는가?',
+    desc:'매출과 손익의 변화를 Volume·Price·Cost 등 핵심 Driver로 나눠 변화의 원인과 다음 액션을 설명합니다.'
+  },
+  {
+    question:'제품과 재고의 흐름이 손익에 어떻게 반영되는가?',
+    desc:'원가 계산, 재고 효과와 배부 구조를 이해하고 제조활동이 손익으로 이어지는 연결고리를 분석합니다.'
+  },
+  {
+    question:'예산과 실적의 차이를 어떻게 관리할 것인가?',
+    desc:'예산 수립부터 집행, KPI와 실적 추적까지 차이를 조기에 확인하고 관리 포인트를 구조화합니다.'
+  },
+  {
+    question:'이 투자는 어떤 기준으로 판단해야 하는가?',
+    desc:'현금흐름, NPV·IRR, 사업성 및 리스크를 함께 검토해 경영진이 판단할 수 있는 의사결정 구조를 만듭니다.'
+  }
+];
+const baseSetExpertise43=setExpertise;
+setExpertise=function(i){
+  baseSetExpertise43(i);
+  const rich=expertiseRich[i]||expertiseRich[0];
+  const q=qs('#expertise-question'),d=qs('#expertise-desc');
+  if(q)q.textContent=rich.question;
+  if(d)d.textContent=rich.desc;
+};
+
+let expManualUntil43=0;
+expRows.forEach((row,i)=>row.addEventListener('click',()=>{
+  expManualUntil43=performance.now()+1800;
+  setExpertise(i);
+},{passive:true}));
+
+function expertise43(){
+  const section=qs('#expertise');
+  if(!section)return;
+  const p=sectionPinProgress(section);
+  const steps=5;
+  const pos=c43(p*.999)*steps;
+  const idx=Math.min(steps-1,Math.floor(pos));
+  const local=pos-idx;
+
+  if(performance.now()>expManualUntil43)setExpertise(idx);
+
+  const pin=qs('.expertise-pin',section);
+  if(pin)pin.style.setProperty('--expertise-progress',String(p));
+
+  qsa('.expertise-row',section).forEach((row,i)=>{
+    const dist=Math.abs(i-idx);
+    row.style.opacity=String(i===idx?1:Math.max(.34,.72-dist*.12));
+    row.style.transform=`translate3d(${i===idx?0:8}px,0,0)`;
+  });
+
+  const vis=qs('.expertise-visual',section);
+  if(vis){
+    const breath=Math.sin(local*Math.PI);
+    vis.style.transform=`translate3d(0,${(-6*breath).toFixed(1)}px,0) scale(${(1+.008*breath).toFixed(4)})`;
+  }
+  const num=qs('#expertise-num');
+  if(num)num.style.transform=`translate3d(${(-16+32*local).toFixed(1)}px,${(-8*local).toFixed(1)}px,0)`;
+
+  qsa('.rise-bars i',section).forEach((bar,i)=>{
+    const q=r43(local,.05+i*.035,.42+i*.035);
+    bar.style.transform=`scaleY(${(.15+.85*q).toFixed(3)})`;
+  });
+  const ring=qs('.ring-art',section);
+  if(ring)ring.style.transform=`translate3d(${(8-16*local).toFixed(1)}px,0,0) rotate(${(16*local).toFixed(1)}deg)`;
+
+  const content=[qs('#expertise-kicker'),qs('#expertise-title'),qs('#expertise-question'),qs('#expertise-desc'),qs('.expertise-detail')];
+  content.filter(Boolean).forEach((el,j)=>{
+    const q=r43(local,.01+j*.035,.25+j*.035);
+    el.style.opacity=String(.18+.82*q);
+    el.style.transform=`translate3d(0,${((1-q)*11).toFixed(1)}px,0)`;
+  });
+}
+
+/* ---------- Writing pinned editorial ---------- */
+function writing43(){
+  const section=qs('#writing');
+  if(!section)return;
+  const p=sectionPinProgress(section);
+  const intro=qsa('.writing-intro > *',section);
+  intro.forEach((el,i)=>reveal43(el,r43(p,.03+i*.035,.18+i*.035),{y:18,min:.05}));
+
+  const topics=qsa('.writing-topic',section);
+  topics.forEach((el,i)=>reveal43(el,r43(p,.18+i*.07,.35+i*.07),{y:13,min:.08}));
+
+  const browser=qs('.writing-browser',section);
+  if(browser){
+    const q=r43(p,.28,.55);
+    const travel=innerWidth<=760 ? 34 : 18;
+    browser.style.opacity=String(.15+.85*q);
+    browser.style.transform=`translate3d(0,${((1-q)*travel-(r43(p,.67,.94)*(innerWidth<=760?92:28))).toFixed(1)}px,0)`;
+  }
+  qsa('.post-row,.writing-empty',section).forEach((row,i)=>{
+    reveal43(row,r43(p,.45+i*.06,.62+i*.06),{y:15,min:.08});
+  });
+  const quote=qs('.writing-quote',section);
+  if(quote)reveal43(quote,r43(p,.72,.92),{y:18,min:.04});
+}
+
+/* ---------- About final pinned scene ---------- */
+function about43(){
+  const section=qs('#about');
+  if(!section)return;
+  const p=sectionPinProgress(section);
+  const pin=qs('.about-pin',section);
+  if(!pin)return;
+  const els=[
+    qs('.section-number',pin),
+    qs('.section-label',pin),
+    qs('h2',pin),
+    qs('div:nth-child(2) p',pin),
+    qs('.contact-button',pin),
+    qs('footer',pin)
+  ].filter(Boolean);
+  els.forEach((el,i)=>reveal43(el,r43(p,.05+i*.10,.25+i*.10),{y:24,min:.03}));
+}
+
+/* ---------- Master frame ---------- */
+let frame43=0;
+function update43(){
+  frame43=0;
+  // B4.5: the B4.3 motion engine is desktop-only.
+  // Mobile has its own scene architecture to avoid two animation
+  // systems writing to the same layout at the same time.
+  if(reduceMotionMQ.matches || innerWidth<=760)return;
+  career43();
+  cases43();
+  expertise43();
+  writing43();
+  about43();
+}
+function request43(){
+  if(!frame43)frame43=requestAnimationFrame(update43);
+}
+window.addEventListener('scroll',request43,{passive:true});
+window.addEventListener('resize',request43,{passive:true});
+window.addEventListener('load',request43,{once:true});
+setTimeout(request43,220);
+request43();
+
+
+
+// =========================================================
+// B4.4 — MOBILE SCENE ARCHITECTURE
+// Mobile uses one visible scene at a time instead of squeezing
+// desktop-density content inside 100svh.
+// =========================================================
+const b44Mobile=window.matchMedia('(max-width:760px)');
+const mobileCaseData={"case-forecast": {"framework": ["다음 3개월의 손익은 어디에서 움직이는가?", "Revenue · Production · Inventory · Cost", "판매계획만 보지 않고 생산과 재고 변화를 연결해 매출원가와 재고효과를 추정합니다.", "예상 손익과 주요 Driver를 미리 확인해 다음 액션을 준비합니다."], "steps": [["01", "REVENUE", "판매 계획", "예상 판매량과 가격을 기준으로 매출 출발점을 만듭니다."], ["02", "PRODUCTION", "생산 계획", "판매계획과 생산량의 차이가 재고에 어떤 변화를 만드는지 연결합니다."], ["03", "INVENTORY", "재고 효과", "원재료 → 재공품 → 제품의 수불 변화가 손익에 미치는 시차를 봅니다."], ["04", "COGS", "매출원가", "재료비·가공비와 재고효과를 반영해 미래 매출원가를 추정합니다."], ["05", "PROFIT", "손익 전망", "Revenue와 COGS를 연결해 다음 3개월의 손익과 주요 변동요인을 봅니다."]]}, "case-profitability": {"framework": ["계획과 실제 사이에서 무엇이 달라졌는가?", "Volume · Price · Material · Cost", "손익 차이를 핵심 Driver로 분해해 증감 원인을 구조적으로 설명합니다.", "가장 큰 영향 요인을 찾아 다음 관리 포인트와 실행 우선순위를 정합니다."], "steps": [["01", "PLAN", "기준점", "계획 손익을 기준점으로 두고 실제와의 차이를 측정합니다."], ["02", "VOLUME", "물량 효과", "판매량 변화가 손익에 끼친 효과를 분리합니다."], ["03", "PRICE", "가격 효과", "판매가격 변화가 만든 영향을 별도로 확인합니다."], ["04", "MATERIAL / COST", "원가 효과", "재료비와 가공비 등 비용 Driver를 분해합니다."], ["05", "RESULT", "Bridge complete", "Driver별 영향을 연결해 계획 대비 최종 손익 차이와 다음 관리 포인트를 설명합니다."]]}, "case-investment": {"framework": ["이 투자는 어떤 기준으로 판단해야 하는가?", "CAPEX · Cash Flow · NPV/IRR · Risk", "투자 규모와 운영 시나리오를 현금흐름으로 연결하고 수익성과 민감도를 함께 봅니다.", "수익성 숫자 하나가 아니라 가정과 리스크까지 포함해 GO / REVIEW / STOP 기준을 만듭니다."], "steps": [["01", "CAPEX", "Initial investment", "초기 투자 규모와 추가 자금 소요를 정의합니다."], ["02", "CASH FLOW", "Operating scenario", "매출·비용·운전자본 가정을 현금흐름 시나리오로 바꿉니다."], ["03", "NPV / IRR", "Return threshold", "현재가치와 내부수익률로 기대수익이 기준을 충족하는지 봅니다."], ["04", "RISK", "Sensitivity", "핵심 가정이 바뀔 때 사업성이 얼마나 흔들리는지 확인합니다."], ["05", "DECISION", "GO / REVIEW / STOP", "수익성과 리스크를 함께 놓고 의사결정 기준을 명확히 합니다."]]}, "case-budget": {"framework": ["예산과 실적의 차이를 어떻게 관리할 것인가?", "Budget · Actual · Variance · Driver", "예산 대비 차이를 조기에 확인하고 원인을 설명 가능한 Driver로 나눕니다.", "원인별 책임과 다음 실행을 연결해 단순 실적 보고를 관리 행동으로 바꿉니다."], "steps": [["01", "TARGET", "Budget · 100", "관리 기준이 되는 예산과 목표 수준을 먼저 고정합니다."], ["02", "TRACK", "82 → 91", "중간 실적을 연속적으로 확인해 정상 범위와 추세를 봅니다."], ["03", "GAP", "104 · OVER", "실적이 기준선을 넘어서는 순간을 명확한 관리 신호로 전환합니다."], ["04", "WHY", "Variance Driver", "차이가 발생한 원인을 핵심 Driver로 나눠 설명합니다."], ["05", "ACTION", "Control next", "원인 분석을 다음 집행·운영 계획의 관리 행동으로 연결합니다."]]}};
+const b44Clamp=n=>Math.max(0,Math.min(1,n));
+const b44Ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+
+function b44PinProgress(el){
+  if(!el)return 0;
+  const r=el.getBoundingClientRect();
+  return b44Clamp(-r.top/Math.max(1,el.offsetHeight-innerHeight));
+}
+
+function b44Career(){
+  if(!b44Mobile.matches)return;
+  const runway=qs('#career .career-scroll');
+  if(!runway)return;
+  const p=b44PinProgress(runway);
+
+  // Seven mobile beats:
+  // Current overview -> 3 Current Focus items -> 2022 -> 2018 -> 2017
+  const bounds=[0,.16,.28,.40,.53,.69,.84,1];
+  let beat=0;
+  for(let i=0;i<bounds.length-1;i++){
+    if(p>=bounds[i] && p<bounds[i+1]){beat=i;break}
+    if(p>=bounds[bounds.length-2])beat=bounds.length-2;
+  }
+
+  const current=careerRoles[0];
+  const focusArticles=qsa('.selected-work article',current);
+  const overviewEls=[
+    qs('.company-type',current),qs('h3',current),qs('.role',current),
+    qs('.tags',current),qs('.career-desc',current),qs('.career-current-flow',current)
+  ].filter(Boolean);
+  const selected=qs('.selected-work',current);
+
+  careerRoles.forEach((role,i)=>{
+    let show=false;
+    if(beat<=3 && i===0)show=true;
+    if(beat===4 && i===1)show=true;
+    if(beat===5 && i===2)show=true;
+    if(beat===6 && i===3)show=true;
+    role.style.opacity=show?'1':'0';
+    role.style.pointerEvents=show?'auto':'none';
+    role.style.transform=show?'translate3d(0,0,0)':'translate3d(0,18px,0)';
+  });
+
+  const inFocus=beat>=1 && beat<=3;
+  current?.classList.toggle('mobile-focus-mode',inFocus);
+  overviewEls.forEach(el=>{
+    el.style.opacity=inFocus?'0':'1';
+    el.style.transform=inFocus?'translate3d(0,-10px,0)':'translate3d(0,0,0)';
+    el.style.pointerEvents=inFocus?'none':'auto';
+  });
+  if(selected){
+    selected.style.opacity=inFocus?'1':'0';
+    selected.style.pointerEvents=inFocus?'auto':'none';
+  }
+  focusArticles.forEach((a,i)=>{
+    const on=inFocus && i===beat-1;
+    a.style.opacity=on?'1':'0';
+    a.style.transform=on?'translate3d(0,0,0)':'translate3d(0,18px,0)';
+    a.classList.toggle('focus-active',on);
+  });
+
+  // Highlight 4 career years; current remains active for overview+focus beats.
+  const yearIndex=beat<=3?0:beat-3;
+  careerYears.forEach((y,i)=>{
+    y.classList.toggle('active',i===yearIndex);
+    y.style.opacity=i===yearIndex?'1':'.36';
+  });
+
+  if(careerBar)careerBar.style.width=`${(p*100).toFixed(1)}%`;
+  if(careerImpactMeta){
+    const labels=[
+      '01 / 07 · CURRENT','02 / 07 · FOCUS 01','03 / 07 · FOCUS 02','04 / 07 · FOCUS 03',
+      '05 / 07 · 2022—2025','06 / 07 · 2018—2022','07 / 07 · FOUNDATION'
+    ];
+    careerImpactMeta.textContent=labels[beat];
+  }
+  if(careerImpact)careerImpact.style.setProperty('--career-scene-progress',String((p-bounds[beat])/Math.max(.001,bounds[beat+1]-bounds[beat])));
+}
+
+
+/* Mobile Career remains scroll-progress based in VERSION 1.
+   Cases, Expertise and Writing use their dedicated final systems below. */
+
+let b44Frame=0;
+function b44Update(){
+  b44Frame=0;
+  if(!b44Mobile.matches || reduceMotionMQ.matches)return;
+  b44Career();
+}
+function b44Request(){
+  if(!b44Frame)b44Frame=requestAnimationFrame(b44Update);
+}
+window.addEventListener('scroll',b44Request,{passive:true});
+window.addEventListener('resize',b44Request,{passive:true});
+window.addEventListener('load',b44Request,{once:true});
+setTimeout(b44Request,260);
+b44Request();
+
+/* =========================================================
+   VERSION 1 — MOBILE CASES + EXPERTISE
+   ========================================================= */
+(()=>{
+  const mobile=window.matchMedia('(max-width:760px)');
+  if(!mobile.matches)return;
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  /* ---------------------------------------------------------
+     CASES — entry-triggered, cancellable, once-complete motion.
+     --------------------------------------------------------- */
+  const notes={
+    'case-forecast':['ANALYSIS LOGIC','판매 → 생산 → 재고 → 원가를 연결해 다음 3개월 손익을 전망합니다.','CONCEPTUAL FLOW · NO COMPANY DATA'],
+    'case-profitability':['BRIDGE LOGIC','계획 대비 차이를 Volume · Price · Cost로 분해해 무엇이 손익을 움직였는지 설명합니다.','ILLUSTRATIVE INDEX'],
+    'case-investment':['DECISION LOGIC','CAPEX · Cash Flow · Return · Risk를 함께 놓고 의사결정 기준을 명확하게 만듭니다.','FRAMEWORK VIEW'],
+    'case-budget':['CONTROL LOGIC','기준을 넘은 GAP을 WHY로 분해하고 다음 ACTION으로 연결합니다.','ILLUSTRATIVE CONTROL FLOW']
+  };
+  document.querySelectorAll('.case-panel').forEach(panel=>{
+    const stage=panel.querySelector('.mobile-case-stage'); if(!stage)return;
+    const n=notes[panel.id];
+    if(n && !stage.querySelector('.b55-case-note')){const note=document.createElement('div');note.className='b55-case-note';note.innerHTML=`<small>${n[0]}</small><p>${n[1]}</p><em>${n[2]}</em>`;stage.appendChild(note)}
+  });
+  const delay=ms=>new Promise(r=>setTimeout(r,ms));
+  async function pause(panel,token,ms){await delay(ms);return panel.dataset.b56Visible==='1' && panel._b56Token===token}
+  function resetCase(panel){
+    const stage=panel.querySelector('.mobile-case-stage'); if(!stage)return;
+    if(panel.id==='case-forecast'){
+      const motif=stage.querySelector('.motif-forecast'); motif?.classList.remove('relay-ready','relay-complete');motif?.style.setProperty('--relay-progress','0%');
+      stage.querySelectorAll('.forecast-mini-line>i,.forecast-mini-labels .motif-step').forEach(x=>x.classList.remove('passed','active'));
+    } else if(panel.id==='case-profitability'){
+      stage.querySelectorAll('.wf-step').forEach(x=>x.classList.remove('passed','active'));stage.querySelectorAll('.wf-link').forEach(x=>x.classList.remove('drawn'));
+    } else if(panel.id==='case-investment'){
+      const motif=stage.querySelector('.decision-converge');motif?.classList.remove('decision-ready','decision-made');stage.querySelectorAll('.decision-converge-node').forEach(x=>x.classList.remove('arrived','active'));
+    } else if(panel.id==='case-budget'){
+      const motif=stage.querySelector('.threshold-chart');motif?.classList.remove('over-limit','why-visible','action-visible');stage.querySelectorAll('.threshold-point,.threshold-action').forEach(x=>x.classList.remove('shown','active'));
+    }
+  }
+  function finishCase(panel){
+    const stage=panel.querySelector('.mobile-case-stage'); if(!stage)return;
+    if(panel.id==='case-forecast'){
+      const motif=stage.querySelector('.motif-forecast');motif?.classList.add('relay-ready','relay-complete');motif?.style.setProperty('--relay-progress','100%');
+      stage.querySelectorAll('.forecast-mini-line>i,.forecast-mini-labels .motif-step').forEach((x,i,a)=>{x.classList.add(i===a.length-1?'active':'passed')});
+      const s=stage.querySelector('.forecast-relay-caption small'),b=stage.querySelector('.forecast-relay-caption strong');if(s)s.textContent='P&L';if(b)b.textContent='3M 손익 전망';
+    } else if(panel.id==='case-profitability'){
+      const steps=[...stage.querySelectorAll('.wf-step')];steps.forEach((x,i)=>x.classList.add(i===steps.length-1?'active':'passed'));stage.querySelectorAll('.wf-link').forEach(x=>x.classList.add('drawn'));
+    } else if(panel.id==='case-investment'){
+      const motif=stage.querySelector('.decision-converge');motif?.classList.add('decision-ready','decision-made');stage.querySelectorAll('.decision-converge-node').forEach(x=>x.classList.add('arrived'));
+    } else if(panel.id==='case-budget'){
+      const motif=stage.querySelector('.threshold-chart');motif?.classList.add('over-limit','why-visible','action-visible');stage.querySelectorAll('.threshold-point,.threshold-action').forEach(x=>x.classList.add('shown'));stage.querySelector('.threshold-action.act')?.classList.add('active');
+    }
+  }
+  async function playCase(panel){
+    if(panel.dataset.b56Played==='1' || panel.dataset.b56Playing==='1')return;
+    panel.dataset.b56Playing='1';const token=(panel._b56Token||0)+1;panel._b56Token=token;resetCase(panel);
+    if(reduce.matches){finishCase(panel);panel.dataset.b56Played='1';panel.dataset.b56Playing='0';return}
+    if(!(await pause(panel,token,180))){panel.dataset.b56Playing='0';return}
+    const stage=panel.querySelector('.mobile-case-stage');if(!stage)return;
+    if(panel.id==='case-forecast'){
+      const motif=stage.querySelector('.motif-forecast'),nodes=[...stage.querySelectorAll('.forecast-mini-line>i')],labels=[...stage.querySelectorAll('.forecast-mini-labels .motif-step')],capS=stage.querySelector('.forecast-relay-caption small'),capB=stage.querySelector('.forecast-relay-caption strong');
+      const caps=[['REVENUE','판매 계획'],['PRODUCTION','생산 반영'],['INVENTORY','재고 효과'],['COGS','원가 추정'],['P&L','3M 손익 전망']];motif?.classList.add('relay-ready');
+      for(let i=0;i<5;i++){motif?.style.setProperty('--relay-progress',`${i*25}%`);nodes.forEach((n,j)=>{n.classList.toggle('passed',j<i);n.classList.toggle('active',j===i)});labels.forEach((n,j)=>{n.classList.toggle('passed',j<i);n.classList.toggle('active',j===i)});if(capS)capS.textContent=caps[i][0];if(capB)capB.textContent=caps[i][1];if(!(await pause(panel,token,i===4?430:330))){resetCase(panel);panel.dataset.b56Playing='0';return}}motif?.classList.add('relay-complete');
+    } else if(panel.id==='case-profitability'){
+      const steps=[...stage.querySelectorAll('.wf-step')],links=[...stage.querySelectorAll('.wf-link')];
+      for(let i=0;i<steps.length;i++){steps.forEach((x,j)=>{x.classList.toggle('passed',j<i);x.classList.toggle('active',j===i)});if(i>0)links[i-1]?.classList.add('drawn');if(!(await pause(panel,token,i===steps.length-1?500:350))){resetCase(panel);panel.dataset.b56Playing='0';return}}
+    } else if(panel.id==='case-investment'){
+      const motif=stage.querySelector('.decision-converge'),nodes=[...motif.querySelectorAll('.decision-converge-node')].slice(0,4);motif?.classList.add('decision-ready');
+      for(let i=0;i<nodes.length;i++){nodes.forEach((x,j)=>{x.classList.toggle('arrived',j<=i);x.classList.toggle('active',j===i)});if(!(await pause(panel,token,350))){resetCase(panel);panel.dataset.b56Playing='0';return}}nodes.forEach(x=>x.classList.remove('active'));motif?.classList.add('decision-made');
+    } else if(panel.id==='case-budget'){
+      const motif=stage.querySelector('.threshold-chart'),points=[...motif.querySelectorAll('.threshold-point')],why=motif.querySelector('.threshold-action.why'),act=motif.querySelector('.threshold-action.act');
+      for(let i=0;i<points.length;i++){points[i].classList.add('shown','active');if(i>0)points[i-1].classList.remove('active');if(i===2)motif?.classList.add('over-limit');if(!(await pause(panel,token,i===2?520:360))){resetCase(panel);panel.dataset.b56Playing='0';return}}points.at(-1)?.classList.remove('active');motif?.classList.add('why-visible');why?.classList.add('shown','active');if(!(await pause(panel,token,430))){resetCase(panel);panel.dataset.b56Playing='0';return}why?.classList.remove('active');motif?.classList.add('action-visible');act?.classList.add('shown','active');
+    }
+    panel.dataset.b56Played='1';panel.dataset.b56Playing='0';
+  }
+  const caseObserver=new IntersectionObserver(entries=>entries.forEach(e=>{
+    const p=e.target;
+    if(e.isIntersecting && e.intersectionRatio>=.58){p.dataset.b56Visible='1';playCase(p)}
+    if(!e.isIntersecting || e.intersectionRatio<.25){p.dataset.b56Visible='0';p._b56Token=(p._b56Token||0)+1;if(p.dataset.b56Played!=='1'){resetCase(p);p.dataset.b56Playing='0'}}
+  }),{threshold:[.2,.25,.58,.72]});
+  document.querySelectorAll('.case-panel').forEach(p=>caseObserver.observe(p));
+
+  /* ---------------------------------------------------------
+     EXPERTISE — one domain = one scene, play only once.
+     --------------------------------------------------------- */
+  const exp=document.getElementById('expertise');
+  if(exp){
+    try{ expertise43=function(){}; }catch(e){}
+    const titles=['PLANNING & FORECASTING','PROFITABILITY ANALYSIS','MANAGEMENT ACCOUNTING','BUDGET & PERFORMANCE','INVESTMENT & DECISION SUPPORT'];
+    const questions=['앞으로 어떤 숫자가 만들어질 것인가?','계획과 실제 사이에서 무엇이 달라졌는가?','제품과 재고의 흐름이 손익에 어떻게 반영되는가?','예산과 실적의 차이를 어떻게 관리할 것인가?','이 투자는 어떤 기준으로 판단해야 하는가?'];
+    const descs=['사업계획과 Rolling Forecast로 판매·생산·재고·원가를 하나의 손익 전망으로 연결합니다.','손익 차이를 Volume·Price·Cost Driver로 나눠 원인과 다음 액션을 설명합니다.','원가·재고·배부 구조가 제조활동에서 손익으로 이어지는 연결을 분석합니다.','예산·KPI·실적 차이를 조기에 확인하고 관리 포인트를 구조화합니다.','현금흐름·수익성·리스크를 함께 놓고 투자 판단 기준을 만듭니다.'];
+    const items=[['Business Planning','Target Profit','3-Month Rolling Forecast','Mid / Long-term P&L'],['P&L Analysis','Variance Analysis','Item Profitability','Project Profitability'],['Costing','Inventory Effect','Cost Allocation','Manufacturing Cost'],['Budget Planning','Budget Control','KPI Management','Performance Tracking'],['Investment Analysis','NPV / IRR','Feasibility Study','Executive Reporting']];
+    const motif=i=>i===0?`<div class="b55-exp-motif b55-exp-forward"><svg viewBox="0 0 300 100" preserveAspectRatio="none"><path d="M4 73 C38 65 46 43 80 55 S118 65 145 38"/><line x1="146" x2="146" y1="5" y2="96"/><path class="future" d="M145 38 C180 30 193 48 222 28 S263 20 296 12"/></svg></div>`:i===1?`<div class="b55-exp-motif b55-exp-bridge"><i style="--h:68%"></i><i style="--h:82%"></i><i style="--h:71%"></i><i style="--h:60%"></i><i style="--h:69%"></i></div>`:i===2?`<div class="b55-exp-motif b55-exp-flow"><span>PRODUCT</span><i>→</i><span>INVENTORY</span><i>→</i><span>COST</span><i>→</i><strong>P&amp;L</strong></div>`:i===3?`<div class="b55-exp-motif b55-exp-control"><span>PLAN</span><span>TRACK</span><span>COMPARE</span><span>CONTROL</span></div>`:`<div class="b55-exp-motif b55-exp-matrix"><i style="--x:18%;--y:24%"></i><i style="--x:34%;--y:55%"></i><i style="--x:56%;--y:34%"></i><i style="--x:72%;--y:67%"></i><i style="--x:82%;--y:78%"></i></div>`;
+    exp.className='b55-expertise';
+    exp.innerHTML=titles.map((title,i)=>`<article class="b55-exp-scene" data-exp="${i}"><div class="b55-exp-watermark">0${i+1}</div><div class="b55-exp-top"><span>04 / EXPERTISE</span><div class="b55-exp-index">${[0,1,2,3,4].map(j=>j===i?`<b>0${j+1}</b>`:`<span>0${j+1}</span>`).join('')}</div></div><div class="b55-exp-body"><small class="b55-exp-kicker">CORE QUESTION</small><h3 class="b55-exp-title">${title}</h3><p class="b55-exp-question">${questions[i]}</p><p class="b55-exp-desc">${descs[i]}</p><div class="b55-exp-cap"><small>CAPABILITIES</small><div class="b55-exp-cap-grid">${items[i].map(x=>`<span>${x}</span>`).join('')}</div></div></div>${motif(i)}</article>`).join('');
+    const expObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.5){e.target.classList.add('is-visible');e.target.dataset.b56Played='1';expObs.unobserve(e.target)}}),{threshold:[.5,.68]});
+    exp.querySelectorAll('.b55-exp-scene').forEach(s=>reduce.matches?s.classList.add('is-visible'):expObs.observe(s));
+  }
+})();
+
+
+/* =========================================================
+   VERSION 1 — SELECTED CASES INTRO
+   One staged entrance; no scroll-progress writer.
+   ========================================================= */
+(()=>{
+  if(!window.matchMedia('(max-width:760px)').matches)return;
+  const intro=document.querySelector('.cases-intro');
+  if(!intro)return;
+  const copy=intro.querySelector('.cases-intro-copy');
+  const title=copy?.querySelector('h2');
+  const desc=[...(copy?.querySelectorAll(':scope > p')||[])].find(
+    p=>!p.classList.contains('section-label')&&!p.classList.contains('case-mobile-index-note')
+  );
+
+  copy?.classList.add('in');
+  intro.classList.add('v1-cases-intro');
+  if(desc)desc.classList.add('v1-cases-desc');
+  if(title){
+    title.innerHTML=`<span class="v1-cases-lines">${['SEE.','EXPLAIN.','DECIDE.','CONTROL.']
+      .map((word,index)=>`<span class="v1-cases-word w${index+1}">${word}</span>`).join('')}</span>`;
+  }
+
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const play=()=>{
+    if(reduce.matches){intro.classList.add('is-playing');return;}
+    intro.classList.remove('is-playing');
+    void intro.offsetWidth;
+    setTimeout(()=>intro.classList.add('is-playing'),50);
+  };
+  let active=false;
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting&&entry.intersectionRatio>.42){
+        if(!active){active=true;play();}
+      }else if(entry.intersectionRatio<.12){
+        active=false;
+        intro.classList.remove('is-playing');
+      }
+    });
+  },{threshold:[0,.12,.42,.65]});
+  observer.observe(intro);
+
+  const rect=intro.getBoundingClientRect();
+  if(rect.top<innerHeight*.82&&rect.bottom>innerHeight*.18)play();
+})();
