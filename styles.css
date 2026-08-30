@@ -4401,3 +4401,107 @@ html.b43-pinned-story body{overflow-x:hidden}
   #writing .post-row h3{font-size:14px!important}
   #writing .read-time{font-size:5.8px!important}
 }
+
+/* =========================================================
+   VERSION 1.1 — WRITING MOBILE COMPACT POLISH
+   2026-08-30
+   - Compact section opener after headline removal
+   - Remove redundant WORK / INVESTING / LIFE intro line
+   - Keep safe 2-line titles with denser post rows
+   ========================================================= */
+@media(max-width:760px){
+  #writing.writing{
+    padding-top:56px!important;
+    padding-bottom:64px!important;
+  }
+  #writing .writing-intro{
+    display:flex!important;
+    align-items:flex-end!important;
+    gap:13px!important;
+    min-height:0!important;
+    height:auto!important;
+  }
+  #writing .writing-intro .section-number{
+    font-size:47px!important;
+    line-height:.72!important;
+    letter-spacing:-.05em!important;
+    color:rgba(7,17,32,.22)!important;
+    margin:0!important;
+  }
+  #writing .writing-intro .section-label{
+    margin:0 0 2px!important;
+    font-size:8.5px!important;
+    line-height:1!important;
+    color:rgba(7,17,32,.72)!important;
+  }
+  #writing .writing-intro .section-sub{
+    display:none!important;
+  }
+  #writing .writing-description{
+    display:none!important;
+  }
+  #writing .writing-browser{
+    margin-top:27px!important;
+  }
+
+  #writing .writing-topic{
+    min-height:66px!important;
+    height:66px!important;
+    padding:10px 9px 9px!important;
+    gap:6px!important;
+  }
+  #writing .writing-topic .topic-num{
+    font-size:24px!important;
+  }
+  #writing .writing-topic .topic-name{
+    font-size:8.5px!important;
+  }
+
+  #writing .writing-panel-head{
+    min-height:74px!important;
+    padding:14px 0 12px!important;
+  }
+  #writing .writing-panel-head small{
+    margin-bottom:7px!important;
+  }
+  #writing .writing-panel-head strong{
+    font-size:27px!important;
+    line-height:.95!important;
+  }
+
+  #writing .post-row{
+    min-height:98px!important;
+    padding:15px 0 16px!important;
+    grid-template-columns:43px minmax(0,1fr) auto!important;
+    gap:0 10px!important;
+    align-items:center!important;
+  }
+  #writing .post-num{
+    font-size:27px!important;
+  }
+  #writing .post-row small{
+    font-size:6.1px!important;
+    margin-bottom:7px!important;
+  }
+  #writing .post-row h3{
+    font-size:14.6px!important;
+    line-height:1.43!important;
+    max-height:2.86em!important;
+  }
+  #writing .read-time{
+    font-size:5.8px!important;
+  }
+  #writing .writing-view-all{
+    min-height:47px!important;
+    margin-top:8px!important;
+  }
+}
+
+@media(max-width:380px){
+  #writing .post-row{
+    grid-template-columns:39px minmax(0,1fr) auto!important;
+    gap:0 8px!important;
+  }
+  #writing .post-row h3{font-size:13.8px!important}
+  #writing .read-time{font-size:5.4px!important}
+}
