@@ -24,3 +24,5 @@
 - Writing 상단의 잔류 inline opacity 문제 발생 경로 제거
 
 이 버전을 이후 변경의 기준점으로 사용합니다.
+
+- Writing mobile polish: Korean tab subtitles removed, two-line post titles no longer clip, up to 3 posts per category.

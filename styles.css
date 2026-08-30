@@ -4297,9 +4297,107 @@ html.b43-pinned-story body{overflow-x:hidden}
 }
 
 
-/* VERSION 1 — Writing intro simplification */
+/* =========================================================
+   VERSION 1 — WRITING MOBILE POLISH
+   2026-08-30
+   - Remove redundant Korean labels from category tabs
+   - Allow 2-line titles without clipping
+   - Keep room for up to 3 latest posts per category
+   ========================================================= */
 @media(max-width:760px){
-  #writing .writing-browser{margin-top:30px!important}
-  #writing .writing-intro .section-sub{margin-top:12px!important}
-  #writing .writing-description{margin-top:10px!important}
+  #writing.writing{
+    padding-top:82px!important;
+    padding-bottom:74px!important;
+  }
+  #writing .writing-intro h2{display:none!important}
+  #writing .writing-browser{margin-top:38px!important}
+
+  #writing .writing-topic{
+    min-height:78px!important;
+    height:78px!important;
+    padding:12px 10px 11px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:flex-start!important;
+    gap:7px!important;
+  }
+  #writing .writing-topic .topic-num{
+    font-size:27px!important;
+    line-height:.82!important;
+  }
+  #writing .writing-topic .topic-name{
+    font-size:9px!important;
+    line-height:1!important;
+    letter-spacing:.09em!important;
+  }
+  #writing .writing-topic small{display:none!important}
+
+  #writing .writing-panel-head{
+    min-height:88px!important;
+    padding:17px 0 15px!important;
+    margin-bottom:0!important;
+  }
+  #writing .writing-panel-head strong{font-size:30px!important}
+
+  #writing .post-list{
+    overflow:visible!important;
+    margin-top:0!important;
+  }
+  #writing .post-row{
+    height:auto!important;
+    min-height:112px!important;
+    padding:18px 0 20px!important;
+    grid-template-columns:48px minmax(0,1fr) auto!important;
+    gap:0 12px!important;
+    align-items:center!important;
+  }
+  #writing .post-num{
+    align-self:center!important;
+    font-size:30px!important;
+    line-height:.9!important;
+  }
+  #writing .post-row>div{
+    min-width:0!important;
+    align-self:center!important;
+  }
+  #writing .post-row small{
+    display:block!important;
+    font-size:6.4px!important;
+    line-height:1.2!important;
+    letter-spacing:.08em!important;
+    margin-bottom:8px!important;
+  }
+  #writing .post-row h3{
+    margin:0!important;
+    font-size:15.5px!important;
+    line-height:1.46!important;
+    letter-spacing:-.035em!important;
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+    max-height:2.92em!important;
+    word-break:keep-all!important;
+  }
+  #writing .read-time{
+    align-self:center!important;
+    margin-left:4px!important;
+    font-size:6.2px!important;
+    white-space:nowrap!important;
+  }
+  #writing .writing-view-all{
+    min-height:50px!important;
+    margin-top:10px!important;
+    padding:0!important;
+  }
+}
+
+@media(max-width:380px){
+  #writing .post-row{
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    gap:0 9px!important;
+  }
+  #writing .post-row h3{font-size:14px!important}
+  #writing .read-time{font-size:5.8px!important}
 }
