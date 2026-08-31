@@ -100,6 +100,108 @@ function figureHtml(key){
       <div class="outcome">P&amp;L + CASH FLOW + RISK → <b>DECISION</b></div>
     </div>
   </figure>`;
+
+  if(key==="THREE_MONTH_VISIBILITY")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 02</span><strong>3개월 Forecast의 정보와 가정</strong></figcaption>
+    <div class="visibility-grid">
+      <div class="v-head"><span></span><b>M+1</b><b>M+2</b><b>M+3</b></div>
+      <div class="v-row"><span>VISIBILITY</span><div class="vbar high"><i></i><em>HIGH</em></div><div class="vbar mid"><i></i><em>MID</em></div><div class="vbar low"><i></i><em>LOW</em></div></div>
+      <div class="v-row"><span>ASSUMPTION</span><div class="vdots"><i></i></div><div class="vdots"><i></i><i></i></div><div class="vdots"><i></i><i></i><i></i></div></div>
+      <p>시간이 갈수록 확정 정보보다 <b>가정의 비중</b>이 커진다.</p>
+    </div>
+  </figure>`;
+
+  if(key==="FORECAST_PROFIT_BRIDGE")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 03</span><strong>Forecast Profit Bridge</strong></figcaption>
+    <div class="profit-bridge">
+      <div class="base" style="--h:70%"><span>100</span><i></i><b>PREVIOUS</b></div>
+      <div class="negative" style="--h:58%"><span>−8</span><i></i><b>MATERIAL</b></div>
+      <div class="negative" style="--h:49%"><span>−5</span><i></i><b>PRODUCTION</b></div>
+      <div class="positive" style="--h:54%"><span>+3</span><i></i><b>PRICE</b></div>
+      <div class="negative" style="--h:45%"><span>−5</span><i></i><b>VOLUME</b></div>
+      <div class="base" style="--h:58%"><span>85</span><i></i><b>CURRENT</b></div>
+    </div>
+    <p class="figure-note">영업이익 추정치는 결과 숫자보다 <b>변화 이유를 설명할 수 있어야</b> 한다.</p>
+  </figure>`;
+
+  if(key==="FORECAST_DRIVER_MAP")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 04</span><strong>Follow the Driver</strong></figcaption>
+    <div class="forecast-driver-map">
+      <div class="fd-top"><span>VOLUME</span><span>PRICE</span></div>
+      <i>↓</i><strong>SALES</strong><i>↓</i><strong>PRODUCTION</strong><i>↓</i>
+      <div class="fd-split"><span>INVENTORY</span><span>COST</span></div>
+      <i>↓</i><strong class="accent">P&amp;L</strong>
+    </div>
+  </figure>`;
+
+  if(key==="FORECAST_INDEX_EXAMPLE")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 05</span><strong>Indexed Example · Current = 100</strong></figcaption>
+    <div class="index-table-wrap">
+      <table class="index-table">
+        <thead><tr><th>INDEX</th><th>CURRENT</th><th>M+1</th><th>M+2</th><th>M+3</th></tr></thead>
+        <tbody>
+          <tr><th>SALES</th><td>100</td><td>103</td><td>107</td><td>110</td></tr>
+          <tr><th>PRODUCTION</th><td>100</td><td>108</td><td>110</td><td>108</td></tr>
+          <tr><th>INVENTORY</th><td>100</td><td>105</td><td>108</td><td>106</td></tr>
+          <tr><th>MATERIAL COST</th><td>100</td><td>102</td><td>104</td><td>104</td></tr>
+          <tr class="profit"><th>PROFIT</th><td>100</td><td>98</td><td>101</td><td>106</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-note">ILLUSTRATIVE INDEX · NO CONFIDENTIAL COMPANY DATA</p>
+  </figure>`;
+
+  if(key==="UNIT_COST_EFFECT")return `
+  <figure class="editorial-figure dark-figure">
+    <figcaption><span>FIGURE 06</span><strong>Production Effect</strong></figcaption>
+    <div class="unit-cost-grid">
+      <div class="unit-card">
+        <small>CASE A</small><span>고정성 제조비 <b>1,000</b></span><span>생산량 <b>100</b></span>
+        <strong>UNIT FIXED COST <em>10.0</em></strong>
+      </div>
+      <i>→</i>
+      <div class="unit-card accent">
+        <small>CASE B</small><span>고정성 제조비 <b>1,000</b></span><span>생산량 <b>110</b></span>
+        <strong>UNIT FIXED COST <em>9.1</em></strong>
+      </div>
+    </div>
+    <div class="effect-grid">
+      <div><small>UPWARD PRESSURE</small><b>원재료 · 변동비 ↑</b><span>총비용 상승 압력</span></div>
+      <em>PRODUCTION ↑</em>
+      <div class="accent"><small>DOWNWARD PRESSURE</small><b>고정비 분산</b><span>단위당 원가 하락</span></div>
+    </div>
+  </figure>`;
+
+  if(key==="M1_PROFIT_DRIVERS")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 07</span><strong>M+1 Profit Drivers</strong></figcaption>
+    <div class="profit-driver-grid">
+      <div class="plus"><b>+</b><span>매출 증가</span></div>
+      <div class="plus"><b>+</b><span>생산 증가에 따른 단위 고정비 감소</span></div>
+      <div class="minus"><b>−</b><span>원재료 가격 상승</span></div>
+      <div class="minus"><b>−</b><span>추가 근무 · 외주비 증가</span></div>
+    </div>
+    <div class="driver-result"><span>NEGATIVE IMPACT &gt; POSITIVE IMPACT</span><b>PROFIT 100 → 98</b></div>
+  </figure>`;
+
+  if(key==="THREE_MONTH_VIEW")return `
+  <figure class="editorial-figure">
+    <figcaption><span>FIGURE 08</span><strong>Three-Month View</strong></figcaption>
+    <div class="three-month-view">
+      <div class="tm-row head"><span></span><b>M+1</b><b>M+2</b><b>M+3</b></div>
+      <div class="tm-row"><span>SALES</span><b>103</b><b>107</b><b>110</b></div>
+      <div class="tm-row"><span>PRODUCTION</span><b>108</b><b>110</b><b>108</b></div>
+      <div class="tm-row"><span>INVENTORY</span><b>105</b><b>108</b><b>106</b></div>
+      <div class="tm-row muted"><span>MATERIAL</span><b>상승</b><b>높은 수준</b><b>안정</b></div>
+      <div class="tm-row profit"><span>PROFIT</span><b>98</b><b>101</b><b>106</b></div>
+      <div class="tm-story"><span>원가 부담<br><em>단기 하락</em></span><i>→</i><span>판매 증가 + 생산효율<br><em>회복 시작</em></span><i>→</i><span>판매 · 재고 효과<br><em>이익 개선</em></span></div>
+    </div>
+  </figure>`;
+
   return "";
 }
 
@@ -147,8 +249,8 @@ function fm(t){
 
 function page(p){
   const cat={work:"WORK",investing:"INVESTING",life:"LIFE"}[p.category]||"WRITING";
-  const categoryLabel=p.category_label||cat;
-  const lead=p.excerpt||"";
+  const categoryLabel=p.category_label||p.label||cat;
+  const lead=p.excerpt||p.summary||"";
   return `<!doctype html>
 <html lang="ko">
 <head>
@@ -170,7 +272,22 @@ function page(p){
 .article-body blockquote{width:min(900px,calc(100vw - 48px));margin:84px 0 84px 50%;transform:translateX(-50%);padding:50px 4vw;border-top:1px solid var(--navy);border-bottom:1px solid var(--navy);text-align:center}.article-body blockquote p{max-width:800px;margin:auto;font-size:clamp(25px,3.1vw,40px);line-height:1.55;letter-spacing:-.04em;color:var(--navy)}
 .editorial-figure{width:min(1040px,calc(100vw - 48px));margin:84px 0 92px 50%;transform:translateX(-50%);padding:30px 0 34px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.editorial-figure figcaption{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:34px;font-family:var(--sans)}.editorial-figure figcaption span{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--blue)}.editorial-figure figcaption strong{font-size:13px}.figure-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:12px}.figure-flow.cycle{grid-template-columns:1fr auto 1fr auto 1fr auto 1.15fr}.figure-flow>div{min-height:126px;padding:22px 18px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}.figure-flow>div.accent{background:var(--navy);border-color:var(--navy);color:#fff}.editorial-figure small{font:500 9px var(--sans);letter-spacing:.1em;color:var(--blue)}.editorial-figure .accent small{color:#8eb9ef}.editorial-figure b{font:700 11px var(--sans);letter-spacing:.06em}.editorial-figure em{font-style:normal;font-size:11px;line-height:1.45;color:var(--muted)}.editorial-figure .accent em{color:rgba(255,255,255,.72)}.editorial-figure i{font-style:normal;color:var(--blue);font-size:18px}.ma-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1.2fr;align-items:center;gap:12px}.ma-grid>div{min-height:126px;padding:22px 18px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}.ma-grid>div.accent{background:var(--navy);border-color:var(--navy);color:#fff}.decision-grid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px}.decision-grid>div{padding:28px;border:1px solid var(--line);min-height:230px}.decision-grid>div.accent{background:var(--navy);border-color:var(--navy);color:#fff}.decision-grid>span{font:650 11px var(--sans);color:var(--blue)}.decision-grid p{font-size:14px;line-height:1.8}.decision-grid em{display:block;margin-top:22px}.decision-stack{text-align:center}.inputs,.scenarios{display:flex;justify-content:center;gap:12px}.inputs span,.scenarios span,.outcome{padding:18px 22px;border:1px solid var(--line);font:600 10px/1.6 var(--sans);letter-spacing:.04em}.decision-stack>i{display:block;margin:14px}.scenarios em{align-self:center}.outcome{display:inline-block;background:var(--navy);color:#fff;border-color:var(--navy)}
 .article-footer{display:grid;grid-template-columns:180px minmax(0,760px);gap:70px;margin-top:106px;padding-top:30px;border-top:1px solid var(--line)}.article-footer small{font:500 9px var(--sans);letter-spacing:.1em;color:var(--muted)}.back{text-decoration:none;font:700 10px var(--sans);letter-spacing:.11em}
-@media(max-width:800px){.article-shell{padding:26px 22px 82px}.article-hero{display:block;padding:62px 0 48px}.hero-index{min-height:auto;flex-direction:row;align-items:center;margin-bottom:42px}.hero-index strong{font-size:54px}.hero-copy h1{font-size:clamp(42px,13.2vw,61px);line-height:1.1}.dek{margin-top:28px;font-size:17px;line-height:1.85}.meta{margin-top:27px;gap:14px;flex-wrap:wrap}.article-layout{display:block;padding-top:42px}.article-aside{display:none}.article-body{font-size:16px;line-height:1.95}.article-body h2{margin-top:78px;font-size:26px}.article-body blockquote{margin-top:64px;margin-bottom:64px;padding:36px 18px}.editorial-figure{margin-top:62px;margin-bottom:70px;padding:24px 0 28px}.editorial-figure figcaption{margin-bottom:26px}.figure-flow,.figure-flow.cycle,.ma-grid,.decision-grid{display:flex;flex-direction:column;align-items:stretch;gap:8px}.editorial-figure i{transform:rotate(90deg);align-self:center}.figure-flow>div,.ma-grid>div{min-height:96px}.decision-grid>span{align-self:center}.inputs,.scenarios{flex-direction:column}.scenarios em{align-self:center}.article-footer{display:block;margin-top:76px}.article-footer small{display:none}}
+
+.visibility-grid{font-family:var(--sans)}.v-head,.v-row{display:grid;grid-template-columns:120px repeat(3,1fr);gap:12px;align-items:center;margin:12px 0}.v-head b{font-size:10px}.v-row>span{font:700 8px var(--sans);letter-spacing:.08em;color:var(--muted)}.vbar{height:38px;background:rgba(7,17,32,.06);position:relative;overflow:hidden}.vbar i{display:block;height:100%;background:var(--navy)}.vbar.high i{width:88%}.vbar.mid i{width:58%}.vbar.low i{width:31%}.vbar em{position:absolute;left:8px;top:12px;color:#fff;font:700 7px var(--sans);letter-spacing:.08em}.vdots{display:flex;gap:6px}.vdots i{width:8px;height:8px;border-radius:50%;background:var(--blue)}.visibility-grid>p{margin:24px 0 0;font-size:12px;color:var(--muted)}
+.profit-bridge{height:250px;display:grid;grid-template-columns:repeat(6,1fr);gap:13px;align-items:end;border-bottom:1px solid var(--line);padding:0 5px}.profit-bridge>div{height:100%;position:relative;display:flex;align-items:flex-end;justify-content:center}.profit-bridge i{display:block;width:100%;height:var(--h);background:rgba(26,87,168,.13);border-top:2px solid var(--blue)}.profit-bridge .base i{background:var(--navy);border:0}.profit-bridge .negative i{background:rgba(7,17,32,.08);border-color:var(--ink)}.profit-bridge span{position:absolute;bottom:calc(var(--h) + 9px);font:400 23px/1 var(--serif)}.profit-bridge b{position:absolute;bottom:-24px;font:700 6px/1 var(--sans);letter-spacing:.05em;text-align:center}.figure-note{margin:40px 0 0!important;font-size:11px!important;line-height:1.6!important;color:var(--muted)}
+.forecast-driver-map{display:flex;flex-direction:column;align-items:center;gap:10px}.fd-top,.fd-split{display:grid;grid-template-columns:1fr 1fr;gap:70px;text-align:center}.forecast-driver-map span,.forecast-driver-map strong{font:700 9px/1 var(--sans);letter-spacing:.08em}.forecast-driver-map strong{padding:13px 25px;border:1px solid var(--line)}.forecast-driver-map strong.accent{background:var(--navy);color:#fff;border-color:var(--navy)}.forecast-driver-map>i{font-style:normal;color:var(--blue)}
+.index-table-wrap{overflow-x:auto}.index-table{width:100%;min-width:590px;border-collapse:collapse;font-family:var(--sans)}.index-table th,.index-table td{padding:14px 12px;border-bottom:1px solid var(--line);text-align:right;font-size:11px}.index-table th:first-child{text-align:left}.index-table thead th{font-size:8px;letter-spacing:.08em;color:var(--muted)}.index-table tr.profit{background:var(--navy);color:#fff}
+.dark-figure{background:var(--navy);color:#fff;padding:34px!important;border:0!important}.dark-figure figcaption{border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:20px}.dark-figure figcaption span{color:#8eb9ef}.unit-cost-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin:8px 0 32px}.unit-card{display:grid;gap:8px;padding:24px;border:1px solid rgba(255,255,255,.2)}.unit-card.accent{border-color:#8eb9ef}.unit-card small{color:#8eb9ef!important}.unit-card span{font-size:11px;color:rgba(255,255,255,.7)}.unit-card strong{border-top:1px solid rgba(255,255,255,.18);margin-top:8px;padding-top:14px;font:700 8px var(--sans);letter-spacing:.05em}.unit-card strong em{float:right;color:#fff;font:400 26px/1 var(--serif);font-style:normal}.unit-cost-grid>i{font-style:normal;color:#8eb9ef}.effect-grid{display:grid;grid-template-columns:1fr 130px 1fr;gap:16px;align-items:stretch}.effect-grid>div{padding:22px;border:1px solid rgba(255,255,255,.18)}.effect-grid small{color:#8eb9ef!important}.effect-grid b{display:block;margin:10px 0 4px}.effect-grid span{font-size:10px;color:rgba(255,255,255,.58)}.effect-grid>em{display:flex;align-items:center;justify-content:center;text-align:center;color:#8eb9ef;font:700 8px var(--sans);letter-spacing:.08em;font-style:normal}
+.profit-driver-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.profit-driver-grid>div{display:flex;align-items:center;gap:10px;padding:16px;border:1px solid var(--line);font-size:12px}.profit-driver-grid b{font-size:18px;color:var(--blue)}.profit-driver-grid .minus b{color:var(--ink)}.driver-result{display:flex;justify-content:space-between;gap:20px;margin-top:22px;padding-top:19px;border-top:1px solid var(--line);font:700 8px/1.5 var(--sans);letter-spacing:.07em}.driver-result b{color:var(--blue)}
+.three-month-view{font-family:var(--sans)}.tm-row{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:8px;padding:12px 0;border-bottom:1px solid rgba(7,17,32,.08)}.tm-row span{font:700 8px var(--sans);letter-spacing:.08em;color:var(--muted)}.tm-row b{text-align:center;font-size:10px}.tm-row.profit{margin-top:8px;padding:14px 10px;background:var(--navy);color:#fff}.tm-row.profit span{color:#9bb9df}.tm-row.profit b{font-size:17px}.tm-row.muted b{font-family:var(--kr);font-weight:500;color:var(--muted)}.tm-story{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;text-align:center;margin-top:24px;font-size:9px;line-height:1.5;color:var(--muted)}.tm-story i{font-style:normal;color:var(--blue)}.tm-story em{font-style:normal;color:var(--ink)}
+@media(max-width:800px){.article-shell{padding:26px 22px 82px}.article-hero{display:block;padding:62px 0 48px}.hero-index{min-height:auto;flex-direction:row;align-items:center;margin-bottom:42px}.hero-index strong{font-size:54px}.hero-copy h1{font-size:clamp(42px,13.2vw,61px);line-height:1.1}.dek{margin-top:28px;font-size:17px;line-height:1.85}.meta{margin-top:27px;gap:14px;flex-wrap:wrap}.article-layout{display:block;padding-top:42px}.article-aside{display:none}.article-body{font-size:16px;line-height:1.95}.article-body h2{margin-top:78px;font-size:26px}.article-body blockquote{margin-top:64px;margin-bottom:64px;padding:36px 18px}.editorial-figure{margin-top:62px;margin-bottom:70px;padding:24px 0 28px}.editorial-figure figcaption{margin-bottom:26px}.figure-flow,.figure-flow.cycle,.ma-grid,.decision-grid{display:flex;flex-direction:column;align-items:stretch;gap:8px}.editorial-figure i{transform:rotate(90deg);align-self:center}.figure-flow>div,.ma-grid>div{min-height:96px}.decision-grid>span{align-self:center}.inputs,.scenarios{flex-direction:column}.scenarios em{align-self:center}.article-footer{display:block;margin-top:76px}.article-footer small{display:none}
+.v-head,.v-row{grid-template-columns:72px repeat(3,1fr);gap:5px}.vbar em{font-size:5px;left:4px}
+.profit-bridge{height:195px;gap:5px}.profit-bridge span{font-size:18px}.profit-bridge b{font-size:5px;transform:rotate(-48deg);transform-origin:left top;white-space:nowrap}
+.fd-top,.fd-split{gap:26px}
+.dark-figure{padding:26px 18px!important}.unit-cost-grid,.effect-grid{grid-template-columns:1fr}.unit-cost-grid>i{text-align:center;transform:rotate(90deg)}.effect-grid>em{padding:6px}
+.profit-driver-grid{grid-template-columns:1fr}.driver-result{display:block}.driver-result b{display:block;margin-top:6px}
+.tm-story{grid-template-columns:1fr;gap:5px}.tm-story i{transform:rotate(90deg)}
+}
 </style>
 </head>
 <body>
