@@ -1,0 +1,67 @@
+media:
+  input: uploads
+  output: /uploads
+
+content:
+  - name: writing
+    label: Writing
+    type: collection
+    path: content/posts
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, series, date, draft]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: 제목
+        type: string
+      - name: short_title
+        label: 홈 짧은 제목
+        type: string
+        description: "Hero 최신 글 링크에 표시할 짧은 제목"
+      - name: date
+        label: 발행일
+        type: date
+      - name: series
+        label: 시리즈
+        type: select
+        options:
+          values: [see, explain, decide, control]
+      - name: series_label
+        label: 세부 라벨
+        type: string
+        description: "예: SEE / 01 · FORECASTING"
+      - name: article_index
+        label: 글 번호
+        type: string
+        default: "01"
+      - name: read_time
+        label: 읽기 시간
+        type: string
+        default: "5 MIN READ"
+      - name: summary
+        label: 소개 문장
+        type: text
+      - name: excerpt
+        label: 목록 요약
+        type: text
+      - name: slug
+        label: URL Slug
+        type: string
+        description: "영문 소문자와 하이픈만 사용"
+      - name: draft
+        label: 임시저장
+        type: boolean
+        default: true
+      - name: featured_image
+        label: 대표 이미지
+        type: image
+        required: false
+      - name: body
+        label: 본문
+        type: rich-text
+        description: "도식은 [[FIGURE:TOKEN]] 한 줄로 입력합니다. HTML과 <style> 태그는 안전하게 문자로 처리됩니다."
