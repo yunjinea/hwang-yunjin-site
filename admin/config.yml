@@ -17,17 +17,22 @@ collections:
     format: "frontmatter"
     fields:
       - { label: "제목", name: "title", widget: "string" }
+      - { label: "홈 짧은 제목", name: "short_title", widget: "string", required: false }
       - { label: "발행일", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - label: "카테고리"
-        name: "category"
+      - label: "시리즈"
+        name: "series"
         widget: "select"
         options:
-          - { label: "업무 / WORK", value: "work" }
-          - { label: "투자 / INVESTING", value: "investing" }
-          - { label: "개인 일상 / LIFE", value: "life" }
-      - { label: "세부 라벨", name: "category_label", widget: "string" }
+          - { label: "전망 / SEE", value: "see" }
+          - { label: "차이 설명 / EXPLAIN", value: "explain" }
+          - { label: "의사결정 / DECIDE", value: "decide" }
+          - { label: "관리 / CONTROL", value: "control" }
+      - { label: "세부 라벨", name: "series_label", widget: "string", hint: "예: SEE / 01 · FORECASTING" }
+      - { label: "글 번호", name: "article_index", widget: "string", default: "01" }
       - { label: "읽기 시간", name: "read_time", widget: "string", default: "5 MIN READ" }
-      - { label: "요약", name: "excerpt", widget: "text" }
+      - { label: "소개 문장", name: "summary", widget: "text" }
+      - { label: "목록 요약", name: "excerpt", widget: "text" }
+      - { label: "URL Slug", name: "slug", widget: "string" }
       - { label: "임시저장", name: "draft", widget: "boolean", default: false }
-      - { label: "대표 이미지", name: "image", widget: "image", required: false }
+      - { label: "대표 이미지", name: "featured_image", widget: "image", required: false }
       - { label: "본문", name: "body", widget: "markdown" }
