@@ -1,6 +1,23 @@
-# VERSION 2.1 — READ Series & Raw Material Cost Lag
+# VERSION 2.2 — Click-to-Explore Selected Cases
 
-Baseline: live root + Version 1.1, 2026-08-31
+Baseline: Version 2.1 final source, 2026-09-01
+
+## Added in 2.2
+
+- Rebuilt Selected Cases as one shared stage with four accessible tabs
+- Added previous / next navigation and Arrow / Home / End keyboard support
+- Added WHY IT MATTERS / HOW I ANALYZE / WHAT IT PRODUCES narratives to every case
+- Added concrete output tags for Forecast, Profitability, Investment and Budget cases
+- Preserved the four distinct data visuals while showing only the selected case
+- Added responsive layouts for desktop, tablet and two-column mobile case selection
+
+## Verified in 2.2
+
+- Desktop: 1363×936 and 1024×768
+- Mobile: 390×844 and 360×800
+- No horizontal document overflow, duplicate IDs, broken local references or broken images
+- One visible Case panel at a time, correct hash state and valid ARIA tab controls
+- Mobile navigation open / Escape close, Case touch targets and representative Expertise / Writing screens
 
 ## Added in 2.1
 

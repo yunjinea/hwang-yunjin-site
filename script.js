@@ -1087,7 +1087,7 @@ function update43(){
   // systems writing to the same layout at the same time.
   if(reduceMotionMQ.matches || innerWidth<=760)return;
   career43();
-  cases43();
+  if(!qs('.case-explorer'))cases43();
   expertise43();
   writing43();
   about43();
@@ -1284,9 +1284,9 @@ b44Request();
   }
   const caseObserver=new IntersectionObserver(entries=>entries.forEach(e=>{
     const p=e.target;
-    if(e.isIntersecting && e.intersectionRatio>=.58){p.dataset.b56Visible='1';playCase(p)}
+    if(e.isIntersecting && e.intersectionRatio>=.34){p.dataset.b56Visible='1';playCase(p)}
     if(!e.isIntersecting || e.intersectionRatio<.25){p.dataset.b56Visible='0';p._b56Token=(p._b56Token||0)+1;if(p.dataset.b56Played!=='1'){resetCase(p);p.dataset.b56Playing='0'}}
-  }),{threshold:[.2,.25,.58,.72]});
+  }),{threshold:[.2,.25,.34,.58]});
   document.querySelectorAll('.case-panel').forEach(p=>caseObserver.observe(p));
 
   /* ---------------------------------------------------------
@@ -1352,4 +1352,104 @@ b44Request();
 
   const rect=intro.getBoundingClientRect();
   if(rect.top<innerHeight*.82&&rect.bottom>innerHeight*.18)play();
+})();
+
+
+/* =========================================================
+   VERSION 2.2 — SELECTED CASES / CLICK-TO-EXPLORE
+   Four cases share one stage. Only the selected case is shown.
+   ========================================================= */
+(()=>{
+  const explorer=document.querySelector('.case-explorer');
+  if(!explorer)return;
+
+  const tabs=[...explorer.querySelectorAll('[data-case-target]')];
+  const panels=tabs.map(tab=>document.getElementById(tab.dataset.caseTarget)).filter(Boolean);
+  const stage=explorer.querySelector('.case-stage');
+  const activeLabel=document.getElementById('case-active-label');
+  const liveStatus=document.getElementById('case-live-status');
+  const previous=explorer.querySelector('[data-case-prev]');
+  const next=explorer.querySelector('[data-case-next]');
+  let activeIndex=0;
+
+  function tabLabel(index){
+    const tab=tabs[index];
+    const number=tab?.querySelector(':scope > span')?.textContent?.trim()||String(index+1).padStart(2,'0');
+    const title=tab?.querySelector('b')?.textContent?.trim()||'';
+    return {number,title,full:`${number} / ${title}`};
+  }
+
+  function selectCase(index,{focus=false,updateHash=true,announce=true,scrollToStage=false}={}){
+    index=(index+tabs.length)%tabs.length;
+    activeIndex=index;
+    const selected=tabs[index];
+    const selectedId=selected.dataset.caseTarget;
+
+    tabs.forEach((tab,i)=>{
+      const active=i===index;
+      tab.classList.toggle('active',active);
+      tab.setAttribute('aria-selected',String(active));
+      tab.tabIndex=active?0:-1;
+    });
+    panels.forEach(panel=>{
+      const active=panel.id===selectedId;
+      panel.hidden=!active;
+      panel.setAttribute('aria-hidden',String(!active));
+      panel.classList.toggle('active',active);
+      panel.classList.toggle('in-view',active);
+      if(active)panel.dataset.b56Visible='1';
+      else panel.dataset.b56Visible='0';
+    });
+
+    const label=tabLabel(index);
+    if(activeLabel)activeLabel.textContent=label.full;
+    if(liveStatus)liveStatus.textContent=`${label.number} / 04 · ${label.title}`;
+    explorer.dataset.activeCase=selectedId;
+    previous?.toggleAttribute('disabled',index===0);
+    next?.toggleAttribute('disabled',index===tabs.length-1);
+
+    stage?.classList.remove('case-is-changing');
+    void stage?.offsetWidth;
+    stage?.classList.add('case-is-changing');
+    window.setTimeout(()=>stage?.classList.remove('case-is-changing'),420);
+
+    if(updateHash && location.hash!==`#${selectedId}`){
+      history.replaceState(null,'',`#${selectedId}`);
+    }
+    if(focus)selected.focus({preventScroll:true});
+    if(announce && liveStatus)liveStatus.setAttribute('data-announced','true');
+    if(scrollToStage)requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(!stage)return;
+      const targetY=window.scrollY+stage.getBoundingClientRect().top-76;
+      window.scrollTo({top:Math.max(0,targetY),behavior:'auto'});
+    }));
+    requestAnimationFrame(()=>{updateChrome();requestRailMotion?.()});
+  }
+
+  tabs.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>selectCase(index,{scrollToStage:true}));
+    tab.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
+      event.preventDefault();
+      let target=index;
+      if(event.key==='ArrowRight'||event.key==='ArrowDown')target=index+1;
+      if(event.key==='ArrowLeft'||event.key==='ArrowUp')target=index-1;
+      if(event.key==='Home')target=0;
+      if(event.key==='End')target=tabs.length-1;
+      selectCase(target,{focus:true,scrollToStage:true});
+    });
+  });
+  previous?.addEventListener('click',()=>selectCase(activeIndex-1,{scrollToStage:true}));
+  next?.addEventListener('click',()=>selectCase(activeIndex+1,{scrollToStage:true}));
+
+  function selectFromHash({scroll=false}={}){
+    const index=tabs.findIndex(tab=>`#${tab.dataset.caseTarget}`===location.hash);
+    if(index<0)return false;
+    selectCase(index,{updateHash:false,announce:false});
+    if(scroll)requestAnimationFrame(()=>explorer.scrollIntoView({block:'start'}));
+    return true;
+  }
+
+  window.addEventListener('hashchange',()=>selectFromHash());
+  if(!selectFromHash({scroll:true}))selectCase(0,{updateHash:false,announce:false});
 })();

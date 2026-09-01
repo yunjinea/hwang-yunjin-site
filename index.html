@@ -300,26 +300,28 @@
       </div>
     </section>
 
-    <section id="case" class="cases-system" data-nav="case">
-      <div class="cases-intro-runway">
-      <div class="cases-intro">
+    <section id="case" class="cases-system case-explorer" data-nav="case">
+      <div class="case-explorer-shell">
+      <header class="cases-intro">
         <div class="cases-intro-copy reveal">
           <div class="section-number nowrap">03</div>
           <p class="section-label">SELECTED CASES</p>
           <h2>SEE.<br>EXPLAIN.<br>DECIDE.<br>CONTROL.</h2>
-          <p>하나의 분석 방식만 보여주기보다, 경영분석에서 반복되는 네 가지 질문을 서로 다른 데이터 언어로 풀어냅니다.</p>
-          <p class="case-mobile-index-note">01 — 04 / FOUR QUESTIONS IN BUSINESS ANALYSIS</p>
+          <p>경영분석은 숫자를 정리하는 데서 끝나지 않습니다. 미래를 먼저 보고, 달라진 이유를 설명하고, 판단의 기준을 만들고, 차이를 다음 행동으로 연결해야 합니다.</p>
+          <p class="case-intro-note">아래 질문을 선택하면 네 가지 분석 사례를 한 자리에서 하나씩 확인할 수 있습니다.</p>
         </div>
-        <nav class="case-index reveal delay-1" aria-label="Selected cases">
-          <a href="#case-forecast"><span>01</span><b>ROLLING FORECAST</b><em>SEE</em></a>
-          <a href="#case-profitability"><span>02</span><b>PROFITABILITY</b><em>EXPLAIN</em></a>
-          <a href="#case-investment"><span>03</span><b>INVESTMENT</b><em>DECIDE</em></a>
-          <a href="#case-budget"><span>04</span><b>BUDGET</b><em>CONTROL</em></a>
+        <nav class="case-index reveal delay-1" role="tablist" aria-label="분석 사례 선택">
+          <button id="case-tab-forecast" class="case-tab active" type="button" role="tab" aria-selected="true" aria-controls="case-forecast" tabindex="0" data-case-target="case-forecast"><span>01</span><span class="case-tab-copy"><b>ROLLING FORECAST</b><small>미래 손익을 미리 본다</small></span><em>SEE</em></button>
+          <button id="case-tab-profitability" class="case-tab" type="button" role="tab" aria-selected="false" aria-controls="case-profitability" tabindex="-1" data-case-target="case-profitability"><span>02</span><span class="case-tab-copy"><b>PROFITABILITY</b><small>변동 원인을 구조화한다</small></span><em>EXPLAIN</em></button>
+          <button id="case-tab-investment" class="case-tab" type="button" role="tab" aria-selected="false" aria-controls="case-investment" tabindex="-1" data-case-target="case-investment"><span>03</span><span class="case-tab-copy"><b>INVESTMENT</b><small>가정과 리스크를 판단한다</small></span><em>DECIDE</em></button>
+          <button id="case-tab-budget" class="case-tab" type="button" role="tab" aria-selected="false" aria-controls="case-budget" tabindex="-1" data-case-target="case-budget"><span>04</span><span class="case-tab-copy"><b>BUDGET</b><small>차이를 다음 행동으로 바꾼다</small></span><em>CONTROL</em></button>
         </nav>
-      </div>
-      </div>
+      </header>
 
-      <article id="case-forecast" class="case-panel case-forecast dark-surface" data-case-theme="dark" data-story-count="5" data-story-label="FLOW">
+      <div class="case-stage">
+        <div class="case-stage-head" aria-hidden="true"><span>ACTIVE CASE</span><strong id="case-active-label">01 / ROLLING FORECAST</strong><em>SELECT A QUESTION</em></div>
+
+      <article id="case-forecast" class="case-panel case-forecast dark-surface active" role="tabpanel" aria-labelledby="case-tab-forecast" data-case-theme="dark" data-story-count="5" data-story-label="FLOW">
         <div class="case-panel-inner">
           <header class="case-copy reveal">
             <div class="case-meta"><span>01 / 04</span><b>SEE</b></div><span class="case-motion-hint">SCROLL TO ADVANCE · TAP TO SELECT</span>
@@ -361,6 +363,12 @@
             <div class="forecast-formula"><span>VOLUME</span><span>PRICE</span><span>MATERIAL</span><span>INVENTORY</span><span>COST</span><strong>→ PROFIT</strong></div>
             <div class="forecast-live" aria-hidden="true"><span class="forecast-live-label">LIVE MODEL</span><div class="forecast-live-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
           </div>
+          <div class="case-deep-dive" aria-label="Rolling Forecast 상세 설명">
+            <div><small>WHY IT MATTERS</small><h4>실적이 확정되기 전에 봅니다.</h4><p>월말 숫자가 나온 뒤 원인을 설명하는 것만으로는 대응 시점이 늦습니다. 판매계획의 변화가 생산과 재고를 거쳐 매출원가와 손익에 반영되는 시차까지 연결해야 미래 손익을 먼저 볼 수 있습니다.</p></div>
+            <div><small>HOW I ANALYZE</small><h4>계획을 Driver 모델로 바꿉니다.</h4><p>제품별 판매량·가격, 생산량·수율, 원재료·재공품·제품 재고와 가공비 가정을 월별로 연결합니다. 하나의 가정이 바뀌면 재고와 손익이 함께 다시 계산되도록 구조화합니다.</p></div>
+            <div><small>WHAT IT PRODUCES</small><h4>전망과 행동을 함께 제시합니다.</h4><p>다음 3개월 손익, 주요 증감 Driver, Base·Upside·Downside 시나리오를 보여주고 구매·생산·판매에서 먼저 확인할 액션을 정리합니다.</p></div>
+            <div class="case-deliverables"><small>OUTPUT</small><span>3-MONTH P&amp;L</span><span>DRIVER BRIDGE</span><span>SCENARIO VIEW</span><span>ACTION LIST</span></div>
+          </div>
           <p class="case-disclaimer">CONCEPTUAL MODEL · NO CONFIDENTIAL COMPANY DATA</p>
         
           <div class="mobile-case-stage" aria-live="polite">
@@ -383,7 +391,7 @@
 </div>
       </article>
 
-      <article id="case-profitability" class="case-panel case-profitability" data-case-theme="light" data-story-count="6" data-story-label="BRIDGE">
+      <article id="case-profitability" class="case-panel case-profitability" role="tabpanel" aria-labelledby="case-tab-profitability" aria-hidden="true" hidden data-case-theme="light" data-story-count="6" data-story-label="BRIDGE">
         <div class="case-panel-inner">
           <header class="case-copy reveal">
             <div class="case-meta"><span>02 / 04</span><b>EXPLAIN</b></div><span class="case-motion-hint">SCROLL TO BUILD THE BRIDGE</span>
@@ -411,6 +419,12 @@
               <div class="bridge-col bridge-base"><span class="bridge-value">100</span><i style="--h:68%"></i><b>ACTUAL</b></div>
             </div>
             <div class="bridge-axis"><span>PLAN</span><span>DRIVERS</span><span>ACTUAL</span></div>
+          </div>
+          <div class="case-deep-dive" aria-label="Profitability Analysis 상세 설명">
+            <div><small>WHY IT MATTERS</small><h4>같은 실적도 원인은 다릅니다.</h4><p>매출이 늘었어도 저수익 제품 비중, 판매가격, 원재료 단가나 생산성 변화에 따라 이익은 줄 수 있습니다. 총액 비교만으로는 무엇을 관리해야 하는지 알기 어렵습니다.</p></div>
+            <div><small>HOW I ANALYZE</small><h4>하나의 기준으로 차이를 분해합니다.</h4><p>계획과 실적의 비교 기준을 맞춘 뒤 Volume·Mix·Price·Material·Conversion Cost로 차이를 분리합니다. 일회성 요인과 구조적 변화를 구분하고 각 Driver가 최종 손익과 일치하는지 검증합니다.</p></div>
+            <div><small>WHAT IT PRODUCES</small><h4>원인에서 관리 질문까지 이어갑니다.</h4><p>손익 Bridge와 핵심 변동요인을 제시하고, 가격 회복·제품 믹스·원가 절감처럼 영향도가 큰 관리 과제를 우선순위로 연결합니다.</p></div>
+            <div class="case-deliverables"><small>OUTPUT</small><span>P&amp;L BRIDGE</span><span>DRIVER RANKING</span><span>ROOT CAUSE</span><span>NEXT QUESTION</span></div>
           </div>
           <p class="case-disclaimer dark-text">ILLUSTRATIVE INDEX · NOT ACTUAL COMPANY PERFORMANCE</p>
         
@@ -442,7 +456,7 @@
 </div>
       </article>
 
-      <article id="case-investment" class="case-panel case-investment dark-surface" data-case-theme="dark" data-story-count="5" data-story-label="DECISION">
+      <article id="case-investment" class="case-panel case-investment dark-surface" role="tabpanel" aria-labelledby="case-tab-investment" aria-hidden="true" hidden data-case-theme="dark" data-story-count="5" data-story-label="DECISION">
         <div class="case-panel-inner">
           <header class="case-copy reveal">
             <div class="case-meta"><span>03 / 04</span><b>DECIDE</b></div><span class="case-motion-hint">SCROLL THROUGH THE DECISION</span>
@@ -468,6 +482,12 @@
             </div>
             <div class="decision-orbit" aria-hidden="true"><span>NPV</span><span>IRR</span><span>RISK</span></div>
             <blockquote>NUMBERS DON’T MAKE DECISIONS.<br><strong>THEY MAKE DECISIONS CLEARER.</strong></blockquote>
+          </div>
+          <div class="case-deep-dive" aria-label="Investment Decision Support 상세 설명">
+            <div><small>WHY IT MATTERS</small><h4>수익성 지표 하나로 결정하지 않습니다.</h4><p>같은 NPV와 IRR도 매출 성장률, 가동률, 운전자본, 투자 시점과 잔존가치 가정에 따라 의미가 달라집니다. 결과보다 먼저 가정의 현실성과 실패 조건을 확인해야 합니다.</p></div>
+            <div><small>HOW I ANALYZE</small><h4>현금흐름과 리스크를 같은 표에 놓습니다.</h4><p>초기 투자와 추가 CAPEX, 운영 현금흐름, 운전자본과 회수 가정을 연결합니다. Base·Upside·Downside 시나리오와 손익분기 민감도를 통해 의사결정을 흔드는 핵심 변수를 찾습니다.</p></div>
+            <div><small>WHAT IT PRODUCES</small><h4>판단 기준과 조건을 남깁니다.</h4><p>NPV·IRR·회수기간뿐 아니라 가정표, 민감도, 주요 리스크와 조건부 승인 기준을 함께 제시해 GO·REVIEW·STOP의 근거를 명확히 합니다.</p></div>
+            <div class="case-deliverables"><small>OUTPUT</small><span>CASH FLOW MODEL</span><span>SENSITIVITY</span><span>RISK REGISTER</span><span>DECISION MEMO</span></div>
           </div>
           <p class="case-disclaimer">FRAMEWORK VIEW · NO PROJECT-SPECIFIC FIGURES</p>
         
@@ -495,7 +515,7 @@
 </div>
       </article>
 
-      <article id="case-budget" class="case-panel case-budget" data-case-theme="light" data-story-count="3" data-story-label="VARIANCE">
+      <article id="case-budget" class="case-panel case-budget" role="tabpanel" aria-labelledby="case-tab-budget" aria-hidden="true" hidden data-case-theme="light" data-story-count="3" data-story-label="VARIANCE">
         <div class="case-panel-inner">
           <header class="case-copy reveal">
             <div class="case-meta"><span>04 / 04</span><b>CONTROL</b></div><span class="case-motion-hint">SCROLL TO TRACK VARIANCE</span>
@@ -523,6 +543,12 @@
             </div>
             <div class="budget-actions"><span>IDENTIFY</span><i>→</i><span>EXPLAIN</span><i>→</i><strong>CONTROL</strong></div>
             <div class="budget-alert"><small>VARIANCE SIGNAL</small><b>OVER BUDGET</b><span>Identify driver → explain impact → control next action</span></div>
+          </div>
+          <div class="case-deep-dive" aria-label="Budget and Performance 상세 설명">
+            <div><small>WHY IT MATTERS</small><h4>차이가 확정되기 전에 관리합니다.</h4><p>월말 실적만 비교하면 이미 집행된 비용을 뒤늦게 설명하게 됩니다. 실제 사용액뿐 아니라 발주·계약된 금액과 남은 기간의 Run-rate까지 봐야 초과 가능성을 먼저 확인할 수 있습니다.</p></div>
+            <div><small>HOW I ANALYZE</small><h4>차이를 원인과 책임으로 연결합니다.</h4><p>조직·계정·프로젝트별 Budget, Actual, Committed, Forecast를 같은 기준으로 비교합니다. 시점 차이·일회성·단가·물량 요인을 구분하고 각 예외에 담당자와 조치 기한을 연결합니다.</p></div>
+            <div><small>WHAT IT PRODUCES</small><h4>보고를 관리 행동으로 바꿉니다.</h4><p>예산 소진 전망, 예외 항목, 주요 Variance Driver와 Action Log를 함께 제시해 보류·재배분·절감 등 다음 집행 판단을 빠르게 만듭니다.</p></div>
+            <div class="case-deliverables"><small>OUTPUT</small><span>VARIANCE MAP</span><span>EXCEPTION LIST</span><span>RUN-RATE</span><span>ACTION LOG</span></div>
           </div>
           <p class="case-disclaimer dark-text">ILLUSTRATIVE INDEX · NOT ACTUAL COMPANY BUDGET</p>
         
@@ -552,6 +578,13 @@
           </div>
 </div>
       </article>
+        <div class="case-switcher" aria-label="사례 순서 이동">
+          <button type="button" data-case-prev aria-label="이전 사례 보기"><span>←</span> PREVIOUS</button>
+          <p id="case-live-status" aria-live="polite">01 / 04 · ROLLING FORECAST</p>
+          <button type="button" data-case-next aria-label="다음 사례 보기">NEXT <span>→</span></button>
+        </div>
+      </div>
+      </div>
     </section>
 
     <section id="expertise" class="section expertise" data-nav="expertise">

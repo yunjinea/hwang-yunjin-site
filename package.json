@@ -1,6 +1,6 @@
 {
   "name": "after-the-numbers",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "description": "AFTER THE NUMBERS static editorial portfolio and Markdown publishing pipeline",
   "scripts": {

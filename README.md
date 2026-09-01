@@ -1,6 +1,14 @@
-# AFTER THE NUMBERS — v2.1
+# AFTER THE NUMBERS — v2.2
 
-현재 라이브 배포본과 `after-the-numbers-v1.1-full` 기준본을 합쳐 복원한 전체 소스입니다. 홈페이지의 기존 시각 언어와 `INTRO → CAREER → SELECTED CASES → EXPERTISE → WRITING → ABOUT` 구조는 유지하면서, 누락된 Writing 아카이브와 Markdown 발행 파이프라인을 복원했습니다.
+`v2.1` 최종 소스를 기준으로 Selected Cases를 한 화면의 선택형 탐색 구조로 개편한 전체 소스입니다. 기존 시각 언어와 `INTRO → CAREER → SELECTED CASES → EXPERTISE → WRITING → ABOUT` 구조, Writing 아카이브와 Markdown 발행 파이프라인은 그대로 유지합니다.
+
+## v2.2 변경사항
+
+- 네 개 Case를 연속 스크롤하는 구조에서 클릭해 하나씩 확인하는 탭 구조로 변경
+- 각 Case에 필요성, 분석 방식, 예상 산출물과 Output 항목을 추가
+- 이전·다음 Case 이동, 키보드 방향키 탐색, 선택 상태 안내를 추가
+- 1363×936, 1024×768, 390×844, 360×800 화면에서 레이아웃과 가로 넘침을 검증
+- 모바일 메뉴, Case 전환, 해시 진입, Writing·Expertise 주요 화면을 함께 점검
 
 ## 배포
 
