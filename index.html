@@ -1,31 +1,47 @@
 <!doctype html>
-<html lang="ko" class="js">
+<html lang="ko" class="no-js">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Business Analysis · FP&A · Management Accounting portfolio" />
+  <meta name="description" content="제조업 경영분석과 FP&A를 숫자 뒤의 변화와 의사결정으로 연결합니다." />
+  <meta name="theme-color" content="#071120" />
+  <link rel="canonical" href="https://hwang-yunjin-site.pages.dev/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate" type="application/rss+xml" title="AFTER THE NUMBERS Writing" href="/writing/feed.xml" />
+  <meta property="og:site_name" content="AFTER THE NUMBERS" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AFTER THE NUMBERS — Business Analysis · FP&amp;A" />
+  <meta property="og:description" content="제조업 경영분석과 FP&amp;A를 숫자 뒤의 변화와 의사결정으로 연결합니다." />
+  <meta property="og:url" content="https://hwang-yunjin-site.pages.dev/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AFTER THE NUMBERS — Business Analysis · FP&amp;A" />
+  <meta name="twitter:description" content="제조업 경영분석과 FP&amp;A를 숫자 뒤의 변화와 의사결정으로 연결합니다." />
   <title>AFTER THE NUMBERS — Business Analysis · FP&A</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
 
-  <!-- AFTER THE NUMBERS · VERSION 1 -->
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <!-- AFTER THE NUMBERS · VERSION 2 -->
+  <script>document.documentElement.classList.replace('no-js','js')</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AFTER THE NUMBERS","url":"https://hwang-yunjin-site.pages.dev/","description":"제조업 경영분석과 FP&A를 숫자 뒤의 변화와 의사결정으로 연결합니다.","inLanguage":"ko-KR"}</script>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/script.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#intro">본문으로 건너뛰기</a>
   <div class="page-grid" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a class="brand" href="#intro">AFTER THE NUMBERS</a>
-    <nav class="topnav" aria-label="주요 메뉴">
+    <a class="brand" href="/#intro">AFTER THE NUMBERS</a>
+    <nav class="topnav" id="primary-navigation" aria-label="주요 메뉴">
       <a href="#career">CAREER</a>
       <a href="#case">CASE</a>
       <a href="#expertise">EXPERTISE</a>
       <a href="#writing">WRITING</a>
       <a href="#about">ABOUT</a>
     </nav>
-    <button class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">MENU</button>
+    <button class="menu-toggle" type="button" aria-label="메뉴 열기" aria-controls="primary-navigation" aria-expanded="false">MENU</button>
   </header>
 
   <aside class="section-rail" aria-label="섹션 진행 상태">
@@ -122,9 +138,10 @@
 
         <div class="hero-story-copy">
           <div class="hero-copy-mask hero-copy-mask--kicker"><p class="hero-kicker">READ THE SIGNAL / BEYOND THE RESULT</p></div>
-          <div class="hero-copy-mask hero-copy-mask--line1"><h1><span>숫자 뒤에 있는</span></h1></div>
-          <div class="hero-copy-mask hero-copy-mask--line2"><h1><span>변화를 읽습니다.</span></h1></div>
+          <div class="hero-copy-mask hero-copy-mask--line1"><h1><span>숫자 뒤에 있는<span class="sr-only"> 변화를 읽습니다.</span></span></h1></div>
+          <div class="hero-copy-mask hero-copy-mask--line2" aria-hidden="true"><p class="hero-display-line"><span>변화를 읽습니다.</span></p></div>
           <div class="hero-copy-mask hero-copy-mask--body"><p>사업계획, 손익, Forecast와 투자 판단까지. 결과 숫자만 보는 것이 아니라 판매·생산·재고·원가의 흐름을 연결해 변화의 이유를 구조화합니다.</p></div>
+          <a class="hero-writing-link" data-latest-writing href="/writing/see01-rolling-forecast/"><small>LATEST WRITING · SEE / 01</small><span>3개월 Rolling Forecast</span><b aria-hidden="true">↗</b></a>
         </div>
 
         <ul class="verbs" aria-label="Analysis process">
@@ -322,11 +339,11 @@
           <div class="case-visual forecast-case-visual reveal delay-1">
             <div class="forecast-flow" id="forecast-flow" aria-label="Rolling Forecast 단계">
               <span class="forecast-track"></span>
-              <button class="forecast-step active" type="button" data-step="0"><small>01</small><i></i><b>REVENUE</b><span>판매 계획</span></button>
-              <button class="forecast-step" type="button" data-step="1"><small>02</small><i></i><b>PRODUCTION</b><span>생산 계획</span></button>
-              <button class="forecast-step" type="button" data-step="2"><small>03</small><i></i><b>INVENTORY</b><span>재고 / 수불</span></button>
-              <button class="forecast-step" type="button" data-step="3"><small>04</small><i></i><b>COGS</b><span>매출원가</span></button>
-              <button class="forecast-step" type="button" data-step="4"><small>05</small><i></i><b>PROFIT</b><span>손익 추정</span></button>
+              <button class="forecast-step active" type="button" aria-pressed="true" data-step="0"><small>01</small><i></i><b>REVENUE</b><span>판매 계획</span></button>
+              <button class="forecast-step" type="button" aria-pressed="false" data-step="1"><small>02</small><i></i><b>PRODUCTION</b><span>생산 계획</span></button>
+              <button class="forecast-step" type="button" aria-pressed="false" data-step="2"><small>03</small><i></i><b>INVENTORY</b><span>재고 / 수불</span></button>
+              <button class="forecast-step" type="button" aria-pressed="false" data-step="3"><small>04</small><i></i><b>COGS</b><span>매출원가</span></button>
+              <button class="forecast-step" type="button" aria-pressed="false" data-step="4"><small>05</small><i></i><b>PROFIT</b><span>손익 추정</span></button>
             </div>
             <div class="forecast-stage-summary" aria-live="polite">
               <small>ACTIVE STAGE</small>
@@ -546,7 +563,7 @@
           <p class="hint">SCROLL TO EXPLORE · TAP TO SELECT</p>
         </div>
         <div class="expertise-stage">
-          <div class="expertise-visual">
+          <div class="expertise-visual" id="expertise-content" role="tabpanel" aria-live="polite">
             <div class="expertise-num nowrap" id="expertise-num">01</div>
             <p class="expertise-kicker" id="expertise-kicker">CORE QUESTION</p>
             <h3 id="expertise-title">PLANNING<br>&amp; FORECASTING</h3>
@@ -580,11 +597,11 @@
             <div class="rise-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           </div>
           <div class="expertise-index" role="tablist" aria-label="전문 분야">
-            <button class="expertise-row active" type="button" data-index="0"><span class="nowrap">01</span><b>PLANNING &amp; FORECASTING</b><i>↗</i></button>
-            <button class="expertise-row" type="button" data-index="1"><span class="nowrap">02</span><b>PROFITABILITY ANALYSIS</b><i>↗</i></button>
-            <button class="expertise-row" type="button" data-index="2"><span class="nowrap">03</span><b>MANAGEMENT ACCOUNTING</b><i>↗</i></button>
-            <button class="expertise-row" type="button" data-index="3"><span class="nowrap">04</span><b>BUDGET &amp; PERFORMANCE</b><i>↗</i></button>
-            <button class="expertise-row" type="button" data-index="4"><span class="nowrap">05</span><b>INVESTMENT &amp; DECISION SUPPORT</b><i>↗</i></button>
+            <button class="expertise-row active" type="button" role="tab" aria-selected="true" aria-controls="expertise-content" tabindex="0" data-index="0"><span class="nowrap">01</span><b>PLANNING &amp; FORECASTING</b><i>↗</i></button>
+            <button class="expertise-row" type="button" role="tab" aria-selected="false" aria-controls="expertise-content" tabindex="-1" data-index="1"><span class="nowrap">02</span><b>PROFITABILITY ANALYSIS</b><i>↗</i></button>
+            <button class="expertise-row" type="button" role="tab" aria-selected="false" aria-controls="expertise-content" tabindex="-1" data-index="2"><span class="nowrap">03</span><b>MANAGEMENT ACCOUNTING</b><i>↗</i></button>
+            <button class="expertise-row" type="button" role="tab" aria-selected="false" aria-controls="expertise-content" tabindex="-1" data-index="3"><span class="nowrap">04</span><b>BUDGET &amp; PERFORMANCE</b><i>↗</i></button>
+            <button class="expertise-row" type="button" role="tab" aria-selected="false" aria-controls="expertise-content" tabindex="-1" data-index="4"><span class="nowrap">05</span><b>INVESTMENT &amp; DECISION SUPPORT</b><i>↗</i></button>
           </div>
         </div>
         <div class="expertise-scroll-meter" aria-hidden="true"><i></i><span>01</span><b>05</b></div>
@@ -596,32 +613,36 @@
       <div class="writing-intro">
         <div class="section-number nowrap">05</div>
         <p class="section-label">WRITING</p>
-        <p class="section-sub">WORK · INVESTING · LIFE</p>
-        <p class="writing-description" id="writing-description">업무에서 배운 분석과 의사결정을 기록합니다.</p>
+        <p class="section-sub">SEE · EXPLAIN · DECIDE · CONTROL</p>
+        <p class="writing-description" id="writing-description">앞으로 만들어질 숫자와 그 전제를 기록합니다.</p>
       </div>
 
       <div class="writing-browser reveal delay-1">
-        <div class="writing-topics" role="tablist" aria-label="Writing topics">
-          <button class="writing-topic active" type="button" role="tab" aria-selected="true" data-writing-topic="work">
+        <div class="writing-topics" role="tablist" aria-label="Writing series">
+          <button class="writing-topic active" id="writing-tab-see" type="button" role="tab" aria-selected="true" aria-controls="writing-panel" tabindex="0" data-writing-topic="see">
             <span class="topic-num">01</span>
-            <span class="topic-name">WORK</span>
+            <span class="topic-name">SEE</span>
           </button>
-          <button class="writing-topic" type="button" role="tab" aria-selected="false" data-writing-topic="investing">
+          <button class="writing-topic" id="writing-tab-explain" type="button" role="tab" aria-selected="false" aria-controls="writing-panel" tabindex="-1" data-writing-topic="explain">
             <span class="topic-num">02</span>
-            <span class="topic-name">INVESTING</span>
+            <span class="topic-name">EXPLAIN</span>
           </button>
-          <button class="writing-topic" type="button" role="tab" aria-selected="false" data-writing-topic="life">
+          <button class="writing-topic" id="writing-tab-decide" type="button" role="tab" aria-selected="false" aria-controls="writing-panel" tabindex="-1" data-writing-topic="decide">
             <span class="topic-num">03</span>
-            <span class="topic-name">LIFE</span>
+            <span class="topic-name">DECIDE</span>
+          </button>
+          <button class="writing-topic" id="writing-tab-control" type="button" role="tab" aria-selected="false" aria-controls="writing-panel" tabindex="-1" data-writing-topic="control">
+            <span class="topic-num">04</span>
+            <span class="topic-name">CONTROL</span>
           </button>
           <i class="writing-topic-indicator" aria-hidden="true"></i>
         </div>
 
-        <div class="writing-panel" id="writing-panel" role="tabpanel" aria-live="polite">
+        <div class="writing-panel" id="writing-panel" role="tabpanel" aria-labelledby="writing-tab-see" aria-live="polite">
           <div class="writing-panel-head">
             <div>
-              <small id="writing-kicker">WORK NOTES</small>
-              <strong id="writing-title">WORK</strong>
+              <small id="writing-kicker">FORECAST NOTES</small>
+              <strong id="writing-title">SEE</strong>
             </div>
             <span id="writing-count">03 STORIES</span>
           </div>
@@ -643,7 +664,7 @@
       <div><div class="section-number light nowrap">06</div><p class="section-label light">ABOUT</p></div>
       <div><h2>LET’S TALK.</h2><p>이야기를 나누고 싶다면 편하게 연락주세요.</p></div>
       <a class="contact-button" href="mailto:yjiness@gmail.com" aria-label="이메일 보내기: yjiness@gmail.com">yjiness@gmail.com <span>→</span></a>
-      <footer><span>© 2026 AFTER THE NUMBERS</span><nav><a href="#career">CAREER</a><a href="#expertise">EXPERTISE</a><a href="#writing">WRITING</a><a href="#about">ABOUT</a></nav></footer>
+      <footer><span>© 2026 AFTER THE NUMBERS</span><nav><a href="/#career">CAREER</a><a href="/#expertise">EXPERTISE</a><a href="/writing/">WRITING</a><a href="/#about">ABOUT</a></nav></footer>
       </div>
     </section>
   </main>

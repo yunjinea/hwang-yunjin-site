@@ -41,8 +41,19 @@ function updateChrome(){
   rail?.classList.toggle('on-dark',onDark);
 }
 window.addEventListener('scroll',updateChrome,{passive:true});updateChrome();
-menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});
-qsa('.topnav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false')}));
+function closeMenu({focus=false}={}){
+  nav.classList.remove('open');
+  menu.setAttribute('aria-expanded','false');
+  menu.setAttribute('aria-label','메뉴 열기');
+  if(focus)menu.focus();
+}
+menu.addEventListener('click',()=>{
+  const open=nav.classList.toggle('open');
+  menu.setAttribute('aria-expanded',String(open));
+  menu.setAttribute('aria-label',open?'메뉴 닫기':'메뉴 열기');
+});
+qsa('.topnav a').forEach(a=>a.addEventListener('click',()=>closeMenu()));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open'))closeMenu({focus:true})});
 
 // Career scrollytelling — current role intentionally receives the longest dwell time.
 const careerSection=qs('#career');
@@ -73,7 +84,11 @@ const inventory=qs('#inventory-subflow');
 const forecastStageTitle=qs('#forecast-stage-title');
 const forecastStageDesc=qs('#forecast-stage-desc');
 function setForecastStep(i){
-  forecastSteps.forEach((el,j)=>el.classList.toggle('active',i===j));
+  forecastSteps.forEach((el,j)=>{
+    const active=i===j;
+    el.classList.toggle('active',active);
+    el.setAttribute('aria-pressed',String(active));
+  });
   const active=forecastSteps[i];
   if(!active)return;
   if(forecastStageTitle)forecastStageTitle.textContent=active.querySelector('b').textContent;
@@ -102,8 +117,30 @@ const expertiseData=[
   {num:'05',title:'INVESTMENT<br>& DECISION SUPPORT',items:['Investment Analysis','NPV / IRR','Feasibility Study','Executive Reporting']}
 ];
 const expRows=qsa('.expertise-row');const expNum=qs('#expertise-num');const expTitle=qs('#expertise-title');const expList=qs('#expertise-list');
-function setExpertise(i){const d=expertiseData[i];expNum.textContent=d.num;expTitle.innerHTML=d.title;expList.innerHTML=d.items.map(x=>`<li>${x}</li>`).join('');expRows.forEach((r,j)=>r.classList.toggle('active',i===j))}
+function setExpertise(i){
+  const d=expertiseData[i];
+  expNum.textContent=d.num;
+  expTitle.innerHTML=d.title;
+  expList.innerHTML=d.items.map(x=>`<li>${x}</li>`).join('');
+  expRows.forEach((r,j)=>{
+    const active=i===j;
+    r.classList.toggle('active',active);
+    r.setAttribute('aria-selected',String(active));
+    r.tabIndex=active?0:-1;
+  });
+}
 expRows.forEach((r,i)=>{r.addEventListener('mouseenter',()=>setExpertise(i));r.addEventListener('focus',()=>setExpertise(i));r.addEventListener('click',()=>setExpertise(i))});
+expRows.forEach((row,index)=>row.addEventListener('keydown',event=>{
+  if(!['ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
+  event.preventDefault();
+  let next=index;
+  if(event.key==='ArrowDown')next=(index+1)%expRows.length;
+  if(event.key==='ArrowUp')next=(index-1+expRows.length)%expRows.length;
+  if(event.key==='Home')next=0;
+  if(event.key==='End')next=expRows.length-1;
+  setExpertise(next);
+  expRows[next].focus({preventScroll:true});
+}));
 
 
 // B3.3.1 — Mobile scroll motion.
@@ -547,8 +584,8 @@ requestRailMotion();
 
 
 // =========================================================
-// B3.4.2 — WRITING TOPIC SELECTOR
-// WORK / INVESTING / LIFE
+// VERSION 2 — WRITING SERIES SELECTOR
+// SEE / EXPLAIN / DECIDE / CONTROL
 // =========================================================
 const writingTopics=qsa('.writing-topic');
 const writingTopicsEl=qs('.writing-topics');
@@ -562,48 +599,43 @@ const writingQuote=qs('#writing-quote-text');
 const writingViewAll=qs('#writing-view-all');
 
 const writingData={
-  work:{
-    title:'WORK',
-    kicker:'WORK NOTES',
-    description:'업무에서 배운 분석과 의사결정을 기록합니다.',
-    quote:'숫자 뒤에 있는 사업을 이해합니다.<br>더 나은 결정을 만들기 위해 오늘도 데이터를 봅니다.',
-    posts:[
-      {category:'BUSINESS ANALYSIS',title:'손익 Forecast는 왜 실제와 달라지는가',time:'8 MIN READ',preview:'work'},
-      {category:'MANAGEMENT ACCOUNTING',title:'재고 변화가 손익에 미치는 영향',time:'6 MIN READ',preview:'work'},
-      {category:'BUSINESS PLANNING',title:'사업계획에서 목표손익을 만드는 과정',time:'7 MIN READ',preview:'work'}
-    ]
+  see:{
+    title:'SEE',
+    kicker:'FORECAST NOTES',
+    description:'앞으로 만들어질 숫자와 그 전제를 기록합니다.',
+    quote:'결과가 나오기 전에 흐름을 읽습니다.<br>판매에서 손익까지 이어지는 변화를 봅니다.',
+    posts:[]
   },
-  investing:{
-    title:'INVESTING',
-    kicker:'INVESTMENT NOTES',
-    description:'시장과 기업을 보며 생각한 투자 기준과 관점을 기록합니다.',
-    quote:'가격의 움직임보다 기업의 변화와 숫자의 방향을 먼저 보려고 합니다.',
-    posts:[
-      {category:'COMPANY ANALYSIS',title:'기업 실적을 볼 때 먼저 확인하는 숫자',time:'7 MIN READ',preview:'invest'},
-      {category:'LONG-TERM INVESTING',title:'장기 투자에서 변동성을 어떻게 바라볼 것인가',time:'6 MIN READ',preview:'invest'},
-      {category:'PORTFOLIO',title:'적립식 투자에서 수익률보다 먼저 생각하는 것',time:'5 MIN READ',preview:'invest'}
-    ]
+  explain:{
+    title:'EXPLAIN',
+    kicker:'VARIANCE NOTES',
+    description:'계획과 실제 사이에서 달라진 이유를 기록합니다.',
+    quote:'차이는 결과가 아니라 질문의 시작입니다.<br>무엇이 왜 달라졌는지 Driver로 설명합니다.',
+    posts:[]
   },
-  life:{
-    title:'LIFE',
-    kicker:'PERSONAL NOTES',
-    description:'일과 가족, 공부 사이의 평범한 순간과 생각을 기록합니다.',
-    quote:'거창한 계획보다 꾸준히 남긴 기록이 결국 삶의 방향을 보여준다고 생각합니다.',
-    posts:[
-      {category:'LEARNING',title:'직장인이 다시 공부를 시작하면서',time:'5 MIN READ',preview:'life'},
-      {category:'DAILY LIFE',title:'일과 가족 사이에서 나만의 시간을 만드는 방법',time:'4 MIN READ',preview:'life'},
-      {category:'MONTHLY NOTE',title:'한 달을 기록하고 다시 설계하는 습관',time:'4 MIN READ',preview:'life'}
-    ]
+  decide:{
+    title:'DECIDE',
+    kicker:'DECISION NOTES',
+    description:'숫자를 선택과 의사결정의 기준으로 연결합니다.',
+    quote:'좋은 분석은 결론을 대신하지 않습니다.<br>더 나은 선택을 할 수 있는 구조를 만듭니다.',
+    posts:[]
+  },
+  control:{
+    title:'CONTROL',
+    kicker:'PERFORMANCE NOTES',
+    description:'목표와 실적의 차이를 다음 행동으로 바꿉니다.',
+    quote:'측정에서 멈추지 않고 관리로 이어갑니다.<br>차이를 발견하고 다음 기준을 다시 세웁니다.',
+    posts:[]
   }
 };
 
 function writingPreview(type,index){
-  if(type==='work'){
+  if(type==='see'){
     return `<span class="post-preview preview-work" aria-hidden="true">
       <i></i><i></i><i></i><i></i>
     </span>`;
   }
-  if(type==='invest'){
+  if(type==='explain'){
     const variants=[
       'M5 42 L22 34 L35 37 L50 22 L66 27 L82 9',
       'M5 35 L20 24 L34 31 L49 18 L64 21 L82 12',
@@ -614,11 +646,13 @@ function writingPreview(type,index){
     </span>`;
   }
   return `<span class="post-preview preview-life" aria-hidden="true">
-    <b>${String(index+1).padStart(2,'0')}</b><small>NOTE / 52</small>
+    <b>${String(index+1).padStart(2,'0')}</b><small>${type==='decide'?'DECIDE':'CONTROL'}</small>
   </span>`;
 }
 
-let activeWritingTopic='work';
+const escapeWritingHTML=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const safeWritingHref=value=>/^\/writing\/[a-z0-9-]+\/$/.test(String(value||''))?String(value):'/writing/';
+let activeWritingTopic='see';
 let writingSwitchTimer=0;
 
 function renderWritingTopic(key,{focus=false}={}){
@@ -632,6 +666,8 @@ function renderWritingTopic(key,{focus=false}={}){
     const active=btn.dataset.writingTopic===key;
     btn.classList.toggle('active',active);
     btn.setAttribute('aria-selected',String(active));
+    btn.tabIndex=active?0:-1;
+    if(active)writingPanel.setAttribute('aria-labelledby',btn.id);
     if(active && focus)btn.focus({preventScroll:true});
   });
 
@@ -645,23 +681,23 @@ function renderWritingTopic(key,{focus=false}={}){
     writingKicker.textContent=d.kicker;
     const totalCount=Number.isFinite(d.totalCount)?d.totalCount:d.posts.length;
     const homePosts=d.posts.slice(0,3);
-    writingCount.textContent=`${String(totalCount).padStart(2,'0')} STORIES`;
+    writingCount.textContent=`${String(totalCount).padStart(2,'0')} ${totalCount===1?'STORY':'STORIES'}`;
     writingDescription.textContent=d.description;
     writingQuote.innerHTML=d.quote;
     if(writingViewAll){
-      writingViewAll.href=`/writing/?category=${encodeURIComponent(key)}`;
-      writingViewAll.innerHTML=`VIEW ALL ${String(totalCount).padStart(2,'0')} STORIES <span>→</span>`;
-      writingViewAll.hidden=totalCount===0;
+      writingViewAll.href=`/writing/?series=${encodeURIComponent(key)}`;
+      writingViewAll.innerHTML=`VIEW ALL ${String(totalCount).padStart(2,'0')} ${totalCount===1?'STORY':'STORIES'} <span>→</span>`;
+      writingViewAll.hidden=totalCount<=homePosts.length;
     }
 
     writingPostList.innerHTML=homePosts.length ? homePosts.map((post,i)=>`
-      <a class="post-row" style="--row-index:${i}" href="${post.url||'#writing'}">
+      <a class="post-row" style="--row-index:${i}" href="${safeWritingHref(post.url)}">
         <span class="post-num nowrap">${String(i+1).padStart(2,'0')}</span>
         <div>
-          <small>${post.category}</small>
-          <h3>${post.title}</h3>
+          <small>${escapeWritingHTML(post.category)}</small>
+          <h3>${escapeWritingHTML(post.title)}</h3>
         </div>
-        <span class="read-time nowrap">${post.time}</span>
+        <span class="read-time nowrap">${escapeWritingHTML(post.time)}</span>
         ${writingPreview(post.preview,i)}
       </a>
     `).join('') : `
@@ -694,10 +730,29 @@ writingTopics.forEach(btn=>{
 });
 
 Object.values(writingData).forEach(d=>{d.posts=[];d.totalCount=0});
-renderWritingTopic('work');
+renderWritingTopic('see');
 
-function normalizePublishedPost(p){return{category:p.category_label||({work:'WORK',investing:'INVESTING',life:'LIFE'}[p.category]||'WRITING'),title:p.title,time:p.read_time||'',preview:p.category==='investing'?'invest':p.category==='life'?'life':'work',url:p.url,excerpt:p.excerpt||''}}
-async function loadPublishedWriting(){try{const r=await fetch('/writing/index.json',{cache:'no-store'});if(!r.ok)throw new Error('Writing index unavailable');const posts=await r.json();['work','investing','life'].forEach(k=>{const f=posts.filter(p=>p.category===k).map(normalizePublishedPost);writingData[k].posts=f;writingData[k].totalCount=f.length});renderWritingTopic(activeWritingTopic)}catch(e){['work','investing','life'].forEach(k=>{writingData[k].posts=[];writingData[k].totalCount=0});renderWritingTopic(activeWritingTopic);console.warn('Writing index unavailable — empty state shown')}}
+function normalizePublishedPost(p){
+  const key=p.series||p.category||'see';
+  return{category:p.series_label||p.category_label||writingData[key]?.title||'WRITING',title:p.title||'',time:p.read_time||'',preview:key,url:p.url,excerpt:p.excerpt||''};
+}
+async function loadPublishedWriting(){
+  try{
+    const r=await fetch('/writing/index.json',{cache:'no-store'});
+    if(!r.ok)throw new Error('Writing index unavailable');
+    const posts=await r.json();
+    Object.keys(writingData).forEach(key=>{
+      const filtered=posts.filter(post=>(post.series||post.category)===key).map(normalizePublishedPost);
+      writingData[key].posts=filtered;
+      writingData[key].totalCount=filtered.length;
+    });
+    renderWritingTopic(activeWritingTopic);
+  }catch(e){
+    Object.values(writingData).forEach(data=>{data.posts=[];data.totalCount=0});
+    renderWritingTopic(activeWritingTopic);
+    console.warn('Writing index unavailable — empty state shown');
+  }
+}
 loadPublishedWriting();
 
 
@@ -824,6 +879,16 @@ function career43(){
     side.style.opacity=String(1-.64*fade);
     side.style.transform=`translate3d(0,${(-9*fade).toFixed(1)}px,0)`;
   }
+  // A direct #career link must open on a readable first frame.
+  if(p<=.02 && careerRoles[0]){
+    careerRoles[0].style.opacity='1';
+    careerRoles[0].style.transform='none';
+    careerRoles[0].style.pointerEvents='auto';
+    qsa('.period,.company-type,h3,.role,.tags,.career-desc,.selected-work article',careerRoles[0]).forEach(el=>{
+      el.style.opacity='1';
+      el.style.transform='none';
+    });
+  }
 }
 
 /* ---------- Cases intro ---------- */
@@ -831,11 +896,9 @@ function casesIntro43(){
   const runway=qs('.cases-intro-runway');
   const intro=qs('.cases-intro');
   if(!runway||!intro)return;
-  const p=sectionPinProgress(runway);
-  const left=qsa('.cases-intro-copy > *',intro);
-  left.forEach((el,i)=>reveal43(el,r43(p,.03+i*.06,.22+i*.06),{y:28,min:.04}));
-  qsa('.case-index a',intro).forEach((el,i)=>{
-    reveal43(el,r43(p,.28+i*.09,.48+i*.09),{x:18,y:0,min:.04});
+  qsa('.cases-intro-copy,.case-index,.cases-intro-copy > *,.case-index a',intro).forEach(el=>{
+    el.style.opacity='1';
+    el.style.transform='none';
   });
 }
 
@@ -912,8 +975,8 @@ function cases43(){
   storyPanels.forEach(panel=>{
     const p=sectionPinProgress(panel);
     const copy=qs('.case-copy',panel), visual=qs('.case-visual',panel);
-    reveal43(copy,r43(p,.03,.20),{x:-18,y:12,min:.04});
-    reveal43(visual,r43(p,.11,.31),{x:20,y:12,min:.04});
+    if(copy){copy.style.opacity='1';copy.style.transform='none'}
+    if(visual){visual.style.opacity='1';visual.style.transform='none'}
 
     if(panel.id==='case-forecast')forecast43(panel,p);
     if(panel.id==='case-profitability')bridge43(panel,p);
@@ -998,52 +1061,28 @@ function expertise43(){
   const content=[qs('#expertise-kicker'),qs('#expertise-title'),qs('#expertise-question'),qs('#expertise-desc'),qs('.expertise-detail')];
   content.filter(Boolean).forEach((el,j)=>{
     const q=r43(local,.01+j*.035,.25+j*.035);
-    el.style.opacity=String(.18+.82*q);
+    el.style.opacity=String(.72+.28*q);
     el.style.transform=`translate3d(0,${((1-q)*11).toFixed(1)}px,0)`;
   });
 }
 
-/* ---------- Writing pinned editorial ---------- */
+/* ---------- Writing is a normal-flow editorial section ---------- */
 function writing43(){
   const section=qs('#writing');
   if(!section)return;
-  const p=sectionPinProgress(section);
-  const intro=qsa('.writing-intro > *',section);
-  intro.forEach((el,i)=>reveal43(el,r43(p,.03+i*.035,.18+i*.035),{y:18,min:.05}));
-
-  const topics=qsa('.writing-topic',section);
-  topics.forEach((el,i)=>reveal43(el,r43(p,.18+i*.07,.35+i*.07),{y:13,min:.08}));
-
-  const browser=qs('.writing-browser',section);
-  if(browser){
-    const q=r43(p,.28,.55);
-    const travel=innerWidth<=760 ? 34 : 18;
-    browser.style.opacity=String(.15+.85*q);
-    browser.style.transform=`translate3d(0,${((1-q)*travel-(r43(p,.67,.94)*(innerWidth<=760?92:28))).toFixed(1)}px,0)`;
-  }
-  qsa('.post-row,.writing-empty',section).forEach((row,i)=>{
-    reveal43(row,r43(p,.45+i*.06,.62+i*.06),{y:15,min:.08});
+  qsa('.writing-intro > *,.writing-topic,.writing-browser,.post-row,.writing-empty,.writing-quote',section).forEach(el=>{
+    el.style.opacity='1';
+    el.style.transform='none';
   });
-  const quote=qs('.writing-quote',section);
-  if(quote)reveal43(quote,r43(p,.72,.92),{y:18,min:.04});
 }
 
-/* ---------- About final pinned scene ---------- */
+/* ---------- About is visible on entry ---------- */
 function about43(){
   const section=qs('#about');
   if(!section)return;
-  const p=sectionPinProgress(section);
   const pin=qs('.about-pin',section);
   if(!pin)return;
-  const els=[
-    qs('.section-number',pin),
-    qs('.section-label',pin),
-    qs('h2',pin),
-    qs('div:nth-child(2) p',pin),
-    qs('.contact-button',pin),
-    qs('footer',pin)
-  ].filter(Boolean);
-  els.forEach((el,i)=>reveal43(el,r43(p,.05+i*.10,.25+i*.10),{y:24,min:.03}));
+  qsa(':scope > *',pin).forEach(el=>{el.style.opacity='1';el.style.transform='none'});
 }
 
 /* ---------- Master frame ---------- */
@@ -1077,6 +1116,8 @@ request43();
 // desktop-density content inside 100svh.
 // =========================================================
 const b44Mobile=window.matchMedia('(max-width:760px)');
+const mobileLayoutAtLoad=b44Mobile.matches;
+b44Mobile.addEventListener?.('change',event=>{if(event.matches!==mobileLayoutAtLoad)location.reload()});
 const mobileCaseData={"case-forecast": {"framework": ["다음 3개월의 손익은 어디에서 움직이는가?", "Revenue · Production · Inventory · Cost", "판매계획만 보지 않고 생산과 재고 변화를 연결해 매출원가와 재고효과를 추정합니다.", "예상 손익과 주요 Driver를 미리 확인해 다음 액션을 준비합니다."], "steps": [["01", "REVENUE", "판매 계획", "예상 판매량과 가격을 기준으로 매출 출발점을 만듭니다."], ["02", "PRODUCTION", "생산 계획", "판매계획과 생산량의 차이가 재고에 어떤 변화를 만드는지 연결합니다."], ["03", "INVENTORY", "재고 효과", "원재료 → 재공품 → 제품의 수불 변화가 손익에 미치는 시차를 봅니다."], ["04", "COGS", "매출원가", "재료비·가공비와 재고효과를 반영해 미래 매출원가를 추정합니다."], ["05", "PROFIT", "손익 전망", "Revenue와 COGS를 연결해 다음 3개월의 손익과 주요 변동요인을 봅니다."]]}, "case-profitability": {"framework": ["계획과 실제 사이에서 무엇이 달라졌는가?", "Volume · Price · Material · Cost", "손익 차이를 핵심 Driver로 분해해 증감 원인을 구조적으로 설명합니다.", "가장 큰 영향 요인을 찾아 다음 관리 포인트와 실행 우선순위를 정합니다."], "steps": [["01", "PLAN", "기준점", "계획 손익을 기준점으로 두고 실제와의 차이를 측정합니다."], ["02", "VOLUME", "물량 효과", "판매량 변화가 손익에 끼친 효과를 분리합니다."], ["03", "PRICE", "가격 효과", "판매가격 변화가 만든 영향을 별도로 확인합니다."], ["04", "MATERIAL / COST", "원가 효과", "재료비와 가공비 등 비용 Driver를 분해합니다."], ["05", "RESULT", "Bridge complete", "Driver별 영향을 연결해 계획 대비 최종 손익 차이와 다음 관리 포인트를 설명합니다."]]}, "case-investment": {"framework": ["이 투자는 어떤 기준으로 판단해야 하는가?", "CAPEX · Cash Flow · NPV/IRR · Risk", "투자 규모와 운영 시나리오를 현금흐름으로 연결하고 수익성과 민감도를 함께 봅니다.", "수익성 숫자 하나가 아니라 가정과 리스크까지 포함해 GO / REVIEW / STOP 기준을 만듭니다."], "steps": [["01", "CAPEX", "Initial investment", "초기 투자 규모와 추가 자금 소요를 정의합니다."], ["02", "CASH FLOW", "Operating scenario", "매출·비용·운전자본 가정을 현금흐름 시나리오로 바꿉니다."], ["03", "NPV / IRR", "Return threshold", "현재가치와 내부수익률로 기대수익이 기준을 충족하는지 봅니다."], ["04", "RISK", "Sensitivity", "핵심 가정이 바뀔 때 사업성이 얼마나 흔들리는지 확인합니다."], ["05", "DECISION", "GO / REVIEW / STOP", "수익성과 리스크를 함께 놓고 의사결정 기준을 명확히 합니다."]]}, "case-budget": {"framework": ["예산과 실적의 차이를 어떻게 관리할 것인가?", "Budget · Actual · Variance · Driver", "예산 대비 차이를 조기에 확인하고 원인을 설명 가능한 Driver로 나눕니다.", "원인별 책임과 다음 실행을 연결해 단순 실적 보고를 관리 행동으로 바꿉니다."], "steps": [["01", "TARGET", "Budget · 100", "관리 기준이 되는 예산과 목표 수준을 먼저 고정합니다."], ["02", "TRACK", "82 → 91", "중간 실적을 연속적으로 확인해 정상 범위와 추세를 봅니다."], ["03", "GAP", "104 · OVER", "실적이 기준선을 넘어서는 순간을 명확한 관리 신호로 전환합니다."], ["04", "WHY", "Variance Driver", "차이가 발생한 원인을 핵심 Driver로 나눠 설명합니다."], ["05", "ACTION", "Control next", "원인 분석을 다음 집행·운영 계획의 관리 행동으로 연결합니다."]]}};
 const b44Clamp=n=>Math.max(0,Math.min(1,n));
 const b44Ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;

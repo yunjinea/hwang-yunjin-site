@@ -1,26 +1,38 @@
-# AFTER THE NUMBERS — VERSION 1
+# AFTER THE NUMBERS — Final v2.0
 
-기준일: 2026-08-30
-
-이 폴더는 현재 확정된 홈페이지 프론트엔드의 **Version 1 기준본**입니다.
-앞으로 디자인/기능 수정은 이 버전을 기준으로 관리합니다.
-
-## 파일
-
-- `index.html` — 페이지 구조와 콘텐츠
-- `styles.css` — 전체 디자인, 반응형, 애니메이션
-- `script.js` — 메뉴, Hero, Career, Cases, Expertise, Writing 동작
-- `VERSION.md` — Version 1 기준과 정리 내역
+현재 라이브 배포본과 `after-the-numbers-v1.1-full` 기준본을 합쳐 복원한 전체 소스입니다. 홈페이지의 기존 시각 언어와 `INTRO → CAREER → SELECTED CASES → EXPERTISE → WRITING → ABOUT` 구조는 유지하면서, 누락된 Writing 아카이브와 Markdown 발행 파이프라인을 복원했습니다.
 
 ## 배포
 
-GitHub 저장소 루트의 `index.html`, `styles.css`, `script.js`를 이 세 파일로 교체하면 됩니다.
-기존 `build.js`는 이 세 파일을 `dist/`로 복사하므로 빌드 구조를 바꿀 필요가 없습니다.
-`admin/`, `content/`, `build.js`, `package.json`은 그대로 유지하세요.
+- Build command: `npm run build`
+- Output directory: `dist`
+- Node.js: 20 이상
+- Cloudflare Pages 환경에서 저장소의 `main` 브랜치와 위 설정을 연결합니다.
 
-## 유지보수 원칙
+로컬 확인:
 
-1. 새로운 수정은 HTML 안에 `<style>` 또는 큰 인라인 `<script>`를 추가하지 않습니다.
-2. 스타일은 `styles.css`, 동작은 `script.js`에 반영합니다.
-3. 임시 버전 패치는 최종 확정 시 기존 로직에 통합합니다.
-4. 모바일과 PC는 같은 콘텐츠를 공유하되 UX는 각 화면 크기에 맞게 분리합니다.
+```bash
+npm test
+npm run dev
+```
+
+## 글 발행
+
+1. `/admin/`에서 Pages CMS로 이동합니다.
+2. `content/posts`에 Markdown 글 1개를 생성하거나 업로드합니다.
+3. `draft: false`로 Publish 합니다.
+4. GitHub 커밋을 감지한 Cloudflare Pages가 `npm run build`를 실행합니다.
+
+글 형식은 `content/POST_TEMPLATE.md`를 사용합니다. 본문의 `[[FIGURE:TOKEN]]`은 `figures/TOKEN.html`로 변환되며, 공개 글은 도식이 최소 2개 있어야 빌드됩니다. Markdown 본문에 직접 넣은 HTML과 `<style>` 태그는 실행되지 않고 문자로 안전하게 표시됩니다.
+
+## 시리즈
+
+- SEE — 앞으로 어떤 숫자가 만들어질지 본다
+- EXPLAIN — 계획과 실제의 차이를 설명한다
+- DECIDE — 숫자를 선택과 판단으로 연결한다
+- CONTROL — 목표와 실적의 차이를 다음 행동으로 바꾼다
+
+## 패키지 구분
+
+- Full source: 저장소 전체 교체용
+- Deploy: `dist` 내용만 포함한 Cloudflare Pages 직접 업로드용

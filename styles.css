@@ -4505,3 +4505,54 @@ html.b43-pinned-story body{overflow-x:hidden}
   #writing .post-row h3{font-size:13.8px!important}
   #writing .read-time{font-size:5.4px!important}
 }
+
+/* =========================================================
+   VERSION 2.0 — FINAL LIVE RECOVERY & UX CORRECTIONS
+   ========================================================= */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.skip-link{position:fixed;z-index:200;left:16px;top:12px;padding:12px 16px;background:#fff;color:var(--ink);transform:translateY(-160%);transition:transform .18s}.skip-link:focus{transform:none}
+.no-js .reveal{opacity:1!important;transform:none!important}
+.topnav a:focus-visible,.brand:focus-visible,.menu-toggle:focus-visible,.writing-topic:focus-visible,.expertise-row:focus-visible,.forecast-step:focus-visible,.hero-writing-link:focus-visible{outline:2px solid var(--blue);outline-offset:6px}
+html.b43-pinned-story{scroll-behavior:auto}
+[id]{scroll-margin-top:76px}
+
+.hero-display-line{margin:0;font-family:var(--kr);font-size:clamp(29px,2.7vw,43px);line-height:1.43;letter-spacing:-.045em;font-weight:500;word-break:keep-all}
+.hero-writing-link{display:grid;grid-template-columns:1fr auto;gap:5px 20px;width:min(100%,410px);margin-top:19px;padding-top:13px;border-top:1px solid rgba(7,17,32,.18);color:var(--navy)}
+.hero-writing-link small{font-size:6.5px;font-weight:700;letter-spacing:.13em;color:var(--blue)}.hero-writing-link span{font:500 11px/1.45 var(--kr)}.hero-writing-link b{grid-column:2;grid-row:1/3;align-self:center;font-size:17px;font-weight:400;transition:transform .18s}.hero-writing-link:hover b{transform:translate(3px,-3px)}
+
+/* Writing and About open on a complete, readable frame. */
+#writing.writing{height:auto!important;min-height:0!important;padding:120px var(--gutter) 108px!important}
+#writing .writing-pin{position:relative!important;inset:auto!important;height:auto!important;min-height:0!important;padding:0!important;display:grid!important;grid-template-columns:270px minmax(0,1fr)!important;gap:70px!important;overflow:visible!important}
+#writing .writing-intro>* ,#writing .writing-browser,#writing .writing-topic,#writing .writing-panel,#writing .writing-quote{opacity:1!important;transform:none!important}
+#writing .writing-topics{grid-template-columns:repeat(4,minmax(0,1fr))!important;--topic-count:4}
+#writing .writing-topic-indicator{width:25%!important;transform:translateX(calc(var(--topic-index,0) * 100%))!important}
+#writing .writing-quote{grid-column:2!important;margin:30px 0 0!important}
+#writing .writing-view-all[hidden]{display:none!important}
+#about.about{height:auto!important;min-height:100svh!important;padding:0!important}
+#about .about-pin{position:relative!important;inset:auto!important;height:auto!important;min-height:100svh!important}
+#about .about-pin>*{opacity:1!important;transform:none!important}
+
+/* A copied hash or keyboard jump never lands on an opacity-first scene. */
+#case:target .cases-intro-copy,#case:target .case-index,#case:target .cases-intro-copy>*,#case:target .case-index a,.case-panel:target .case-copy,.case-panel:target .case-visual,#expertise:target .expertise-visual>* ,#writing:target .writing-pin>* ,#about:target .about-pin>*{opacity:1!important;transform:none!important}
+
+@media(max-width:760px){
+  [id]{scroll-margin-top:64px}
+  .hero-auto .hero-brand-line,.hero-auto .hero-slash-wrap em,.hero-auto .hero-copy-mask>*{animation:none!important;opacity:1!important;transform:none!important}
+  .hero-display-line{font-size:clamp(27px,7.7vw,36px);line-height:1.38}
+  .hero-writing-link{width:min(78vw,340px);margin-top:13px;padding-top:9px}.hero-writing-link small{font-size:6px}.hero-writing-link span{font-size:9.5px}
+  #career .career-scroll{height:560svh!important}
+  .case-panel{height:auto!important;min-height:100svh!important;overflow:visible!important}
+  .case-panel .case-panel-inner{position:relative!important;top:auto!important;height:auto!important;min-height:100svh!important;overflow:visible!important}
+  .case-panel .case-lead{font-size:12px!important;line-height:1.62!important}.b55-case-note p{font-size:11px!important;line-height:1.55!important}.b55-case-note small,.b55-case-note em{font-size:7.5px!important}
+  #expertise .b55-exp-kicker{font-size:8px!important}.b55-exp-question{font-size:13px!important}.b55-exp-desc{font-size:11.5px!important;line-height:1.7!important}.b55-exp-cap>small{font-size:8px!important}.b55-exp-cap-grid span{font-size:9px!important;min-height:39px!important}
+  #writing.writing{padding:62px var(--gutter) 70px!important}
+  #writing .writing-pin{display:block!important}
+  #writing .writing-topics{grid-template-columns:repeat(4,minmax(0,1fr))!important;overflow:visible!important;scrollbar-width:none}
+  #writing .writing-topic{min-width:0!important}.writing-topic .topic-name{font-size:9px!important}
+  #writing .post-row small{font-size:8px!important}.writing-panel-head small{font-size:8px!important}.writing-panel-head>span{font-size:8px!important}.read-time,#writing .read-time{font-size:8.5px!important}
+  #writing .writing-quote{display:none!important}
+  #about .about-pin{min-height:100svh!important}
+}
+
+@media(max-width:380px){#writing .post-row{grid-template-columns:39px minmax(0,1fr) auto!important}#writing .read-time{font-size:8px!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.hero-writing-link b{transition:none}}
