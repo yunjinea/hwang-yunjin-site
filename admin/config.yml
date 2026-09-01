@@ -23,8 +23,7 @@ collections:
         name: "series"
         widget: "select"
         options:
-          - { label: "전망 / SEE", value: "see" }
-          - { label: "차이 설명 / EXPLAIN", value: "explain" }
+          - { label: "분석 / READ", value: "read" }
           - { label: "의사결정 / DECIDE", value: "decide" }
           - { label: "관리 / CONTROL", value: "control" }
       - { label: "세부 라벨", name: "series_label", widget: "string", hint: "예: SEE / 01 · FORECASTING" }
