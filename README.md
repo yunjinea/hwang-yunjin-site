@@ -1,4 +1,4 @@
-# AFTER THE NUMBERS — Final v2.0
+# AFTER THE NUMBERS — v2.1
 
 현재 라이브 배포본과 `after-the-numbers-v1.1-full` 기준본을 합쳐 복원한 전체 소스입니다. 홈페이지의 기존 시각 언어와 `INTRO → CAREER → SELECTED CASES → EXPERTISE → WRITING → ABOUT` 구조는 유지하면서, 누락된 Writing 아카이브와 Markdown 발행 파이프라인을 복원했습니다.
 
@@ -27,8 +27,7 @@ npm run dev
 
 ## 시리즈
 
-- SEE — 앞으로 어떤 숫자가 만들어질지 본다
-- EXPLAIN — 계획과 실제의 차이를 설명한다
+- READ — 숫자가 만들어지고 달라지는 흐름을 읽는다
 - DECIDE — 숫자를 선택과 판단으로 연결한다
 - CONTROL — 목표와 실적의 차이를 다음 행동으로 바꾼다
 

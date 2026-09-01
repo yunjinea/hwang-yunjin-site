@@ -585,7 +585,7 @@ requestRailMotion();
 
 // =========================================================
 // VERSION 2 — WRITING SERIES SELECTOR
-// SEE / EXPLAIN / DECIDE / CONTROL
+// READ / DECIDE / CONTROL
 // =========================================================
 const writingTopics=qsa('.writing-topic');
 const writingTopicsEl=qs('.writing-topics');
@@ -599,18 +599,11 @@ const writingQuote=qs('#writing-quote-text');
 const writingViewAll=qs('#writing-view-all');
 
 const writingData={
-  see:{
-    title:'SEE',
-    kicker:'FORECAST NOTES',
-    description:'앞으로 만들어질 숫자와 그 전제를 기록합니다.',
-    quote:'결과가 나오기 전에 흐름을 읽습니다.<br>판매에서 손익까지 이어지는 변화를 봅니다.',
-    posts:[]
-  },
-  explain:{
-    title:'EXPLAIN',
-    kicker:'VARIANCE NOTES',
-    description:'계획과 실제 사이에서 달라진 이유를 기록합니다.',
-    quote:'차이는 결과가 아니라 질문의 시작입니다.<br>무엇이 왜 달라졌는지 Driver로 설명합니다.',
+  read:{
+    title:'READ',
+    kicker:'ANALYSIS NOTES',
+    description:'숫자가 만들어지고 달라지는 흐름을 기록합니다.',
+    quote:'결과가 나오기 전과 나온 뒤의 흐름을 함께 읽습니다.<br>숫자 뒤에 있는 Driver를 연결합니다.',
     posts:[]
   },
   decide:{
@@ -630,7 +623,7 @@ const writingData={
 };
 
 function writingPreview(type,index){
-  if(type==='see'){
+  if(type==='read'){
     return `<span class="post-preview preview-work" aria-hidden="true">
       <i></i><i></i><i></i><i></i>
     </span>`;
@@ -652,7 +645,7 @@ function writingPreview(type,index){
 
 const escapeWritingHTML=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const safeWritingHref=value=>/^\/writing\/[a-z0-9-]+\/$/.test(String(value||''))?String(value):'/writing/';
-let activeWritingTopic='see';
+let activeWritingTopic='read';
 let writingSwitchTimer=0;
 
 function renderWritingTopic(key,{focus=false}={}){
@@ -730,10 +723,10 @@ writingTopics.forEach(btn=>{
 });
 
 Object.values(writingData).forEach(d=>{d.posts=[];d.totalCount=0});
-renderWritingTopic('see');
+renderWritingTopic('read');
 
 function normalizePublishedPost(p){
-  const key=p.series||p.category||'see';
+  const key=p.series||p.category||'read';
   return{category:p.series_label||p.category_label||writingData[key]?.title||'WRITING',title:p.title||'',time:p.read_time||'',preview:key,url:p.url,excerpt:p.excerpt||''};
 }
 async function loadPublishedWriting(){

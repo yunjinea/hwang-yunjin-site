@@ -13,8 +13,7 @@ const CONTENT = path.join(ROOT, 'content', 'posts');
 const FIGURES = path.join(ROOT, 'figures');
 const SITE_URL = (process.env.SITE_URL || 'https://hwang-yunjin-site.pages.dev').replace(/\/$/, '');
 const SERIES = {
-  see: { label: 'SEE', name: '전망', description: '앞으로 어떤 숫자가 만들어질지 봅니다.' },
-  explain: { label: 'EXPLAIN', name: '설명', description: '계획과 실제 사이의 차이를 설명합니다.' },
+  read: { label: 'READ', name: '분석', description: '숫자가 만들어지고 달라지는 흐름을 읽습니다.' },
   decide: { label: 'DECIDE', name: '판단', description: '숫자를 선택과 의사결정으로 연결합니다.' },
   control: { label: 'CONTROL', name: '관리', description: '목표와 실적의 차이를 다음 행동으로 바꿉니다.' }
 };
@@ -64,9 +63,9 @@ function parsePost(filePath) {
 
   const required = ['title', 'date'];
   for (const key of required) if (!data[key]) throw new Error(`${path.basename(filePath)}: ${key} 필드가 필요합니다.`);
-  const legacy = { work: 'see', investing: 'decide', life: 'control' };
-  const series = String(data.series || data.category || 'see').toLowerCase();
-  data.series = SERIES[series] ? series : (legacy[series] || 'see');
+  const legacy = { work: 'read', see: 'read', explain: 'read', investing: 'decide', life: 'control' };
+  const series = String(data.series || data.category || 'read').toLowerCase();
+  data.series = SERIES[series] ? series : (legacy[series] || 'read');
   data.slug = String(data.slug || path.basename(filePath, path.extname(filePath)).replace(/^\d{4}-\d{2}-\d{2}-/, ''))
     .toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   if (!data.slug) throw new Error(`${path.basename(filePath)}: 올바른 slug가 필요합니다.`);
@@ -275,7 +274,7 @@ function archivePage(posts) {
   return `<!doctype html>
 <html lang="ko" class="no-js">
 <head>
-${pageHead({ title: 'WRITING — AFTER THE NUMBERS', description: '제조업 경영분석과 FP&A를 SEE, EXPLAIN, DECIDE, CONTROL의 네 가지 질문으로 기록합니다.', canonical: `${SITE_URL}/writing/` })}
+${pageHead({ title: 'WRITING — AFTER THE NUMBERS', description: '제조업 경영분석과 FP&A를 READ, DECIDE, CONTROL의 세 가지 흐름으로 기록합니다.', canonical: `${SITE_URL}/writing/` })}
   <link rel="alternate" type="application/rss+xml" title="AFTER THE NUMBERS Writing" href="/writing/feed.xml">
   <link rel="stylesheet" href="/writing.css">
   <script>document.documentElement.classList.replace('no-js','js')</script>
