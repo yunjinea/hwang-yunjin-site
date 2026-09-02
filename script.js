@@ -1085,7 +1085,7 @@ function update43(){
   // B4.5: the B4.3 motion engine is desktop-only.
   // Mobile has its own scene architecture to avoid two animation
   // systems writing to the same layout at the same time.
-  if(reduceMotionMQ.matches || innerWidth<=760)return;
+  if(document.documentElement.classList.contains('v23-ux') || reduceMotionMQ.matches || innerWidth<=760)return;
   career43();
   if(!qs('.case-explorer'))cases43();
   expertise43();
@@ -1198,7 +1198,7 @@ function b44Career(){
 let b44Frame=0;
 function b44Update(){
   b44Frame=0;
-  if(!b44Mobile.matches || reduceMotionMQ.matches)return;
+  if(document.documentElement.classList.contains('v23-ux') || !b44Mobile.matches || reduceMotionMQ.matches)return;
   b44Career();
 }
 function b44Request(){
@@ -1215,7 +1215,7 @@ b44Request();
    ========================================================= */
 (()=>{
   const mobile=window.matchMedia('(max-width:760px)');
-  if(!mobile.matches)return;
+  if(!mobile.matches || document.documentElement.classList.contains('v23-ux'))return;
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   /* ---------------------------------------------------------
      CASES — entry-triggered, cancellable, once-complete motion.
@@ -1313,7 +1313,7 @@ b44Request();
    One staged entrance; no scroll-progress writer.
    ========================================================= */
 (()=>{
-  if(!window.matchMedia('(max-width:760px)').matches)return;
+  if(!window.matchMedia('(max-width:760px)').matches || document.documentElement.classList.contains('v23-ux'))return;
   const intro=document.querySelector('.cases-intro');
   if(!intro)return;
   const copy=intro.querySelector('.cases-intro-copy');
@@ -1427,7 +1427,7 @@ b44Request();
   }
 
   tabs.forEach((tab,index)=>{
-    tab.addEventListener('click',()=>selectCase(index,{scrollToStage:true}));
+    tab.addEventListener('click',()=>selectCase(index,{scrollToStage:false}));
     tab.addEventListener('keydown',event=>{
       if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
       event.preventDefault();
@@ -1436,11 +1436,13 @@ b44Request();
       if(event.key==='ArrowLeft'||event.key==='ArrowUp')target=index-1;
       if(event.key==='Home')target=0;
       if(event.key==='End')target=tabs.length-1;
-      selectCase(target,{focus:true,scrollToStage:true});
+      selectCase(target,{focus:true,scrollToStage:false});
     });
   });
-  previous?.addEventListener('click',()=>selectCase(activeIndex-1,{scrollToStage:true}));
-  next?.addEventListener('click',()=>selectCase(activeIndex+1,{scrollToStage:true}));
+  previous?.addEventListener('click',()=>selectCase(activeIndex-1,{scrollToStage:false}));
+  next?.addEventListener('click',()=>selectCase(activeIndex+1,{scrollToStage:false}));
+
+  window.afterNumbersCaseSelect=(index,options={})=>selectCase(index,{scrollToStage:false,...options});
 
   function selectFromHash({scroll=false}={}){
     const index=tabs.findIndex(tab=>`#${tab.dataset.caseTarget}`===location.hash);
@@ -1452,4 +1454,227 @@ b44Request();
 
   window.addEventListener('hashchange',()=>selectFromHash());
   if(!selectFromHash({scroll:true}))selectCase(0,{updateHash:false,announce:false});
+})();
+
+
+/* =========================================================
+   VERSION 2.3 — VIEWPORT-FIRST UX
+   One readable scene at a time, with explicit click, wheel,
+   keyboard and swipe controls.
+   ========================================================= */
+(()=>{
+  const root=document.documentElement;
+  if(!root.classList.contains('v23-ux'))return;
+
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const desktop=()=>window.innerWidth>=900;
+  const wrapDetails=(content,{className,label,meta})=>{
+    if(!content || content.parentElement?.matches('details'))return content?.parentElement||null;
+    const details=document.createElement('details');
+    details.className=className;
+    const summary=document.createElement('summary');
+    summary.innerHTML=`<span><b>${label}</b><small>${meta}</small></span><i aria-hidden="true"></i>`;
+    content.before(details);
+    details.append(summary,content);
+    return details;
+  };
+
+  // Keep dense supporting material available without making the page needlessly long.
+  const currentWork=document.querySelector('.career-role--current .selected-work');
+  wrapDetails(currentWork,{
+    className:'v23-detail v23-career-detail',
+    label:'현재 역할의 핵심 업무 3가지',
+    meta:'P&L ISSUE · FORECAST · BUDGET'
+  });
+  document.querySelectorAll('.case-deep-dive').forEach((content,index)=>{
+    wrapDetails(content,{
+      className:'v23-detail v23-case-detail',
+      label:'분석 상세 보기',
+      meta:['WHY · HOW · OUTPUT','WHY · DRIVER · ACTION','ASSUMPTION · RISK · DECISION','VARIANCE · OWNER · ACTION'][index]
+    });
+  });
+
+  // Overall reading progress.
+  const pageProgress=document.createElement('div');
+  pageProgress.className='v23-page-progress';
+  pageProgress.setAttribute('aria-hidden','true');
+  pageProgress.innerHTML='<i></i>';
+  document.body.append(pageProgress);
+  let progressFrame=0;
+  const updatePageProgress=()=>{
+    progressFrame=0;
+    const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    pageProgress.style.setProperty('--page-progress',String(Math.max(0,Math.min(1,window.scrollY/max))));
+  };
+  const requestPageProgress=()=>{if(!progressFrame)progressFrame=requestAnimationFrame(updatePageProgress)};
+  window.addEventListener('scroll',requestPageProgress,{passive:true});
+  window.addEventListener('resize',requestPageProgress,{passive:true});
+  requestPageProgress();
+
+  // Shared entrance motion; no content is hidden when reduced motion is requested.
+  const revealTargets=[...document.querySelectorAll('#career,#case,#expertise,#writing,#about')];
+  if(reduce.matches){revealTargets.forEach(section=>section.classList.add('v23-in-view'))}
+  else{
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('v23-in-view');observer.unobserve(entry.target)}
+    }),{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    revealTargets.forEach(section=>observer.observe(section));
+  }
+
+  const makeStepper=(className,label)=>{
+    const el=document.createElement('div');
+    el.className=className;
+    el.innerHTML=`<button type="button" data-step-prev aria-label="이전 ${label}"><span aria-hidden="true">←</span> PREV</button><p aria-live="polite"></p><button type="button" data-step-next aria-label="다음 ${label}">NEXT <span aria-hidden="true">→</span></button>`;
+    return el;
+  };
+
+  // Career: one role at a time. Tabs are real buttons and the wheel advances only while the section is centred.
+  const career=document.getElementById('career');
+  const careerStage=career?.querySelector('.career-stage');
+  if(!desktop()&&career&&careerStage){
+    const years=career.querySelector('.career-years');
+    const progress=career.querySelector('.career-progress');
+    if(years)careerStage.before(years);
+    if(years&&progress)years.after(progress);
+  }
+  const careerStepper=career?makeStepper('v23-career-stepper','경력'):null;
+  if(careerStepper)career.querySelector('.career-sticky')?.append(careerStepper);
+  let activeCareer=-1;
+  const careerNames=['2025 — PRESENT','2022 — 2025','2018 — 2022','2017 — 2018'];
+  const activateCareer=(index,{focus=false}={})=>{
+    index=Math.max(0,Math.min(careerRoles.length-1,index));
+    if(index===activeCareer && careerRoles[index]?.classList.contains('active'))return;
+    activeCareer=index;
+    careerRoles.forEach((role,i)=>{
+      const active=i===index;
+      role.classList.toggle('active',active);
+      role.setAttribute('aria-hidden',String(!active));
+    });
+    careerYears.forEach((button,i)=>{
+      const active=i===index;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',String(active));
+      if(active&&focus)button.focus({preventScroll:true});
+    });
+    if(careerBar)careerBar.style.width=`${((index+1)/careerRoles.length)*100}%`;
+    const status=careerStepper?.querySelector('p');
+    if(status)status.textContent=`${String(index+1).padStart(2,'0')} / 04 · ${careerNames[index]}`;
+    careerStepper?.querySelector('[data-step-prev]')?.toggleAttribute('disabled',index===0);
+    careerStepper?.querySelector('[data-step-next]')?.toggleAttribute('disabled',index===careerRoles.length-1);
+    careerStage?.classList.remove('v23-switching');
+    void careerStage?.offsetWidth;
+    careerStage?.classList.add('v23-switching');
+  };
+  careerYears.forEach((button,index)=>{
+    button.addEventListener('click',()=>activateCareer(index));
+    button.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();
+      let target=index;
+      if(event.key==='ArrowRight')target=Math.min(careerRoles.length-1,index+1);
+      if(event.key==='ArrowLeft')target=Math.max(0,index-1);
+      if(event.key==='Home')target=0;
+      if(event.key==='End')target=careerRoles.length-1;
+      activateCareer(target,{focus:true});
+    });
+  });
+  careerStepper?.querySelector('[data-step-prev]')?.addEventListener('click',()=>activateCareer(activeCareer-1));
+  careerStepper?.querySelector('[data-step-next]')?.addEventListener('click',()=>activateCareer(activeCareer+1));
+  activateCareer(0);
+
+  const centred=section=>{
+    const rect=section.getBoundingClientRect();
+    return rect.top<window.innerHeight*.24 && rect.bottom>window.innerHeight*.76;
+  };
+  const wheelNavigator=(section,getIndex,count,select)=>{
+    if(!section)return;
+    let sum=0;
+    let locked=false;
+    section.addEventListener('wheel',event=>{
+      if(!desktop()||reduce.matches||!centred(section)||event.ctrlKey)return;
+      sum+=event.deltaY;
+      if(Math.abs(sum)<58||locked)return;
+      const direction=sum>0?1:-1;
+      sum=0;
+      const index=getIndex();
+      const next=index+direction;
+      if(next<0||next>=count)return;
+      event.preventDefault();
+      locked=true;
+      select(next);
+      window.setTimeout(()=>{locked=false},430);
+    },{passive:false});
+  };
+  wheelNavigator(career,()=>activeCareer,careerRoles.length,index=>activateCareer(index));
+
+  const addSwipe=(surface,getIndex,count,select)=>{
+    if(!surface)return;
+    let startX=0,startY=0;
+    surface.addEventListener('touchstart',event=>{
+      const touch=event.changedTouches[0];startX=touch.clientX;startY=touch.clientY;
+    },{passive:true});
+    surface.addEventListener('touchend',event=>{
+      const touch=event.changedTouches[0];
+      const dx=touch.clientX-startX,dy=touch.clientY-startY;
+      if(Math.abs(dx)<54||Math.abs(dx)<Math.abs(dy)*1.25)return;
+      const next=getIndex()+(dx<0?1:-1);
+      if(next>=0&&next<count)select(next);
+    },{passive:true});
+  };
+  addSwipe(careerStage,()=>activeCareer,careerRoles.length,index=>activateCareer(index));
+
+  // Cases: retain accessible tabs and add desktop wheel + mobile swipe navigation.
+  const caseExplorer=document.querySelector('.case-explorer');
+  const caseTabs=[...(caseExplorer?.querySelectorAll('[data-case-target]')||[])];
+  const caseStage=caseExplorer?.querySelector('.case-stage');
+  const caseIndex=caseExplorer?.querySelector('.case-index');
+  if(!desktop()&&caseStage&&caseIndex)caseStage.before(caseIndex);
+  const currentCaseIndex=()=>Math.max(0,caseTabs.findIndex(tab=>tab.classList.contains('active')));
+  const chooseCase=index=>{
+    window.afterNumbersCaseSelect?.(index,{updateHash:true,announce:true});
+    caseExplorer?.querySelectorAll('.v23-case-detail[open]').forEach(detail=>detail.removeAttribute('open'));
+  };
+  wheelNavigator(caseExplorer, currentCaseIndex, caseTabs.length, chooseCase);
+  addSwipe(caseStage,currentCaseIndex,caseTabs.length,chooseCase);
+
+  // Expertise: tabs, wheel and swipe all update the same live panel.
+  const expertise=document.getElementById('expertise');
+  const expStage=expertise?.querySelector('.expertise-stage');
+  const expStepper=expertise?makeStepper('v23-expertise-stepper','전문 분야'):null;
+  if(expStepper)expertise.querySelector('.expertise-pin')?.append(expStepper);
+  let activeExpertise=0;
+  const expNames=['PLANNING & FORECASTING','PROFITABILITY ANALYSIS','MANAGEMENT ACCOUNTING','BUDGET & PERFORMANCE','INVESTMENT & DECISION SUPPORT'];
+  const activateExpertise=(index,{focus=false}={})=>{
+    index=Math.max(0,Math.min(expRows.length-1,index));
+    activeExpertise=index;
+    setExpertise(index);
+    if(focus)expRows[index]?.focus({preventScroll:true});
+    const status=expStepper?.querySelector('p');
+    if(status)status.textContent=`${String(index+1).padStart(2,'0')} / 05 · ${expNames[index]}`;
+    expStepper?.querySelector('[data-step-prev]')?.toggleAttribute('disabled',index===0);
+    expStepper?.querySelector('[data-step-next]')?.toggleAttribute('disabled',index===expRows.length-1);
+    expStage?.classList.remove('v23-switching');
+    void expStage?.offsetWidth;
+    expStage?.classList.add('v23-switching');
+  };
+  expRows.forEach((row,index)=>row.addEventListener('click',()=>activateExpertise(index)));
+  expStepper?.querySelector('[data-step-prev]')?.addEventListener('click',()=>activateExpertise(activeExpertise-1));
+  expStepper?.querySelector('[data-step-next]')?.addEventListener('click',()=>activateExpertise(activeExpertise+1));
+  activateExpertise(0);
+  wheelNavigator(expertise,()=>activeExpertise,expRows.length,index=>activateExpertise(index));
+  addSwipe(expStage,()=>activeExpertise,expRows.length,index=>activateExpertise(index));
+
+  // Subtle pointer response in the Hero; purely decorative and disabled for touch/reduced motion.
+  const hero=document.getElementById('intro');
+  if(hero&&desktop()&&!reduce.matches){
+    hero.addEventListener('pointermove',event=>{
+      const rect=hero.getBoundingClientRect();
+      hero.style.setProperty('--hero-pointer-x',String((event.clientX-rect.left)/Math.max(1,rect.width)-.5));
+      hero.style.setProperty('--hero-pointer-y',String((event.clientY-rect.top)/Math.max(1,rect.height)-.5));
+    },{passive:true});
+    hero.addEventListener('pointerleave',()=>{
+      hero.style.setProperty('--hero-pointer-x','0');
+      hero.style.setProperty('--hero-pointer-y','0');
+    },{passive:true});
+  }
 })();

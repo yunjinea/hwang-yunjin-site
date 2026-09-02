@@ -1,8 +1,8 @@
 {
   "name": "after-the-numbers",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
-  "description": "AFTER THE NUMBERS static editorial portfolio and Markdown publishing pipeline",
+  "description": "AFTER THE NUMBERS responsive interactive portfolio and Markdown publishing pipeline",
   "scripts": {
     "dev": "node build.js && node scripts/dev-server.js",
     "build": "node build.js",

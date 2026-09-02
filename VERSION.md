@@ -1,6 +1,27 @@
-# VERSION 2.2 — Click-to-Explore Selected Cases
+# VERSION 2.3 — Responsive Interactive Narrative
 
 Baseline: Version 2.1 final source, 2026-09-01
+
+## Added in 2.3
+
+- Reworked the complete Hero → About journey for desktop and mobile
+- Increased readable type sizes and removed clipped, long pinned scenes
+- Added explicit interactive guidance, active states and previous / next controls
+- Added wheel navigation on desktop and swipe navigation on mobile for Career, Cases and Expertise
+- Kept only one Career role, Case and Expertise story active at a time
+- Added sticky mobile selectors and collapsible detail drawers to shorten the page
+- Added a direct Hero → Selected Cases call to action and faster entrance motion
+- Expanded supporting copy across Career, Cases, Expertise, Writing and About
+
+## Verified in 2.3
+
+- Desktop: 1363×936 and 1024×768
+- Mobile: 390×844 and 360×800
+- No horizontal document overflow or duplicate IDs
+- All four Case choices remain visible at the 360×800 Case entry point
+- Correct active / hidden state for Career, Cases and Expertise
+- Click, wheel, swipe, previous / next and detail-drawer interactions
+- Reduced-motion fallback and readable 15–17px primary body copy
 
 ## Added in 2.2
 
