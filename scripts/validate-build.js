@@ -7,7 +7,9 @@ const required = [
   'index.html', 'styles.css', 'script.js', 'article.css', 'article.js',
   'writing/index.html', 'writing/index.json', 'writing/feed.xml',
   'writing/see01-rolling-forecast/index.html', 'admin/index.html',
-  '404.html', 'robots.txt', 'sitemap.xml'
+  '404.html', 'robots.txt', 'sitemap.xml',
+  'cases/rolling-forecast/index.html', 'cases/profitability/index.html',
+  'cases/investment/index.html', 'cases/budget/index.html'
 ];
 
 const errors = [];
@@ -33,13 +35,21 @@ if (fs.existsSync(dist)) {
       const base = path.dirname(path.relative(dist, file));
       const references = [...value.matchAll(/\b(?:href|src)="([^"]+)"/g)].map(match => match[1]);
       for (const reference of references) {
-        if (/^(https?:|mailto:|data:|#)/.test(reference)) continue;
+        if (/^(https?:|mailto:|data:)/.test(reference)) continue;
+        if (reference.startsWith('#')) {
+          if (!ids.includes(reference.slice(1))) errors.push(`missing fragment in ${path.relative(dist,file)}: ${reference}`);
+          continue;
+        }
         const clean = reference.split(/[?#]/)[0];
         if (!clean) continue;
         let relative = clean.startsWith('/') ? clean.slice(1) : path.normalize(path.join(base, clean));
         if (!relative || relative.endsWith('/')) relative = `${relative}index.html`;
         const target = path.join(dist, relative);
         if (!fs.existsSync(target)) errors.push(`broken local reference in ${path.relative(dist, file)}: ${reference}`);
+        else if (reference.includes('#') && target.endsWith('.html')) {
+          const fragment = reference.split('#')[1];
+          if (fragment && !fs.readFileSync(target,'utf8').includes(`id="${fragment}"`)) errors.push(`missing target fragment: ${reference}`);
+        }
       }
     }
   }
