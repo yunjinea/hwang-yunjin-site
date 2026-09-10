@@ -1,0 +1,36 @@
+[
+  {
+    "title": "원재료 가격이 내렸는데 원가는 왜 바로 낮아지지 않을까",
+    "date": "2026-09-01",
+    "series": "read",
+    "category": "read",
+    "series_label": "READ / 02 · COST & MARGIN",
+    "category_label": "READ / 02 · COST & MARGIN",
+    "label": "READ / 02 · COST & MARGIN",
+    "article_index": "02",
+    "read_time": "11 MIN READ",
+    "summary": "시장가격 하락이 구매가격과 재고를 거쳐 매출원가에 반영되는 시차를 따라갑니다.",
+    "excerpt": "시장가격, 구매가격, 투입원가와 매출원가는 같은 시점에 움직이지 않습니다. 재고 POC와 Price–Cost Lag을 통해 그 차이를 살펴봅니다.",
+    "draft": false,
+    "featured_image": "",
+    "slug": "raw-material-cost-lag",
+    "url": "/writing/raw-material-cost-lag/"
+  },
+  {
+    "title": "제조업 3개월 Rolling Forecast는 어떻게 만들어지는가",
+    "date": "2026-08-30",
+    "series": "read",
+    "category": "read",
+    "series_label": "READ / 01 · FORECASTING",
+    "category_label": "READ / 01 · FORECASTING",
+    "label": "READ / 01 · FORECASTING",
+    "article_index": "01",
+    "read_time": "9 MIN READ",
+    "summary": "판매에서 손익까지. 앞으로 3개월의 숫자가 만들어지는 과정을 따라갑니다.",
+    "excerpt": "판매·생산·재고·원가의 연결 구조를 따라 3개월 Rolling Forecast가 손익 전망으로 완성되는 과정을 설명합니다.",
+    "draft": false,
+    "featured_image": "",
+    "slug": "see01-rolling-forecast",
+    "url": "/writing/see01-rolling-forecast/"
+  }
+]
