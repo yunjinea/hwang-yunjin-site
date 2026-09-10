@@ -4,7 +4,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const dist = path.join(root, 'dist');
 const required = [
-  'index.html', 'styles.css', 'script.js', 'article.css', 'article.js',
+  'index.html', 'styles.css', 'script.js', 'motion.css', 'motion.js', 'article.css', 'article.js',
   'writing/index.html', 'writing/index.json', 'writing/feed.xml',
   'writing/see01-rolling-forecast/index.html', 'admin/index.html',
   '404.html', 'robots.txt', 'sitemap.xml',
