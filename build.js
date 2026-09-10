@@ -213,9 +213,9 @@ function articlePage(post) {
   const structured = {'@context':'https://schema.org','@type':'Article',headline:post.title,description:post.summary,datePublished:post.date,dateModified:post.date,inLanguage:'ko-KR',mainEntityOfPage:canonical,author:{'@type':'Organization',name:'AFTER THE NUMBERS'}};
   return `<!doctype html><html lang="ko"><head>
 ${pageHead({title,description:post.summary,canonical,type:'article'})}
-<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/article.css">
+<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/motion.css"><link rel="stylesheet" href="/article.css">
 <meta property="article:published_time" content="${post.date}"><meta property="article:section" content="${SERIES[post.series].label}">
-<script type="application/ld+json">${jsonForHtml(structured)}</script><script src="/script.js" defer></script><script src="/article.js" defer></script>
+<script type="application/ld+json">${jsonForHtml(structured)}</script><script src="/script.js" defer></script><script src="/motion.js" defer></script><script src="/article.js" defer></script>
 </head><body>${pages.header('writing')}<div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
 <main id="main" class="article-shell wrap"><a class="back-link" href="/writing/?series=${post.series}">← ${SERIES[post.series].label} 글 목록</a>
 <header class="article-hero"><span class="eyebrow">${esc(post.series_label)}</span><h1>${esc(post.title)}</h1><p class="dek">${esc(post.summary)}</p><div class="meta"><time datetime="${post.date}">${post.date.replaceAll('-','.')}</time><span>${esc(post.read_time)}</span></div></header>
@@ -235,7 +235,7 @@ function archiveCard(post, index) {
 
 function archivePage(posts) {
   const filters = [['all','전체'], ...Object.entries(SERIES).map(([key,value])=>[key,value.label])];
-  return `<!doctype html><html lang="ko"><head>${pageHead({title:'WRITING — AFTER THE NUMBERS',description:'제조업 경영분석과 FP&A를 READ, DECIDE, CONTROL의 세 가지 흐름으로 기록합니다.',canonical:`${SITE_URL}/writing/`})}<link rel="alternate" type="application/rss+xml" title="AFTER THE NUMBERS Writing" href="/writing/feed.xml"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/writing.css"><script src="/script.js" defer></script><script src="/writing-archive.js" defer></script></head><body>${pages.header('writing')}<main id="main" class="wrap archive-shell"><header class="archive-hero"><div><p class="eyebrow">WRITING / ANALYSIS NOTES</p><h1>숫자를 읽고,<br>생각을 기록합니다.</h1></div><p>숫자의 흐름을 읽는 READ,<br>선택의 기준을 세우는 DECIDE,<br>실행과 관리로 이어지는 CONTROL.</p></header>
+  return `<!doctype html><html lang="ko"><head>${pageHead({title:'WRITING — AFTER THE NUMBERS',description:'제조업 경영분석과 FP&A를 READ, DECIDE, CONTROL의 세 가지 흐름으로 기록합니다.',canonical:`${SITE_URL}/writing/`})}<link rel="alternate" type="application/rss+xml" title="AFTER THE NUMBERS Writing" href="/writing/feed.xml"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/motion.css"><link rel="stylesheet" href="/writing.css"><script src="/script.js" defer></script><script src="/motion.js" defer></script><script src="/writing-archive.js" defer></script></head><body>${pages.header('writing')}<main id="main" class="wrap archive-shell"><header class="archive-hero"><div><p class="eyebrow">WRITING / ANALYSIS NOTES</p><h1>숫자를 읽고,<br>생각을 기록합니다.</h1></div><p>숫자의 흐름을 읽는 READ,<br>선택의 기준을 세우는 DECIDE,<br>실행과 관리로 이어지는 CONTROL.</p></header>
 <nav class="archive-filters" aria-label="시리즈 필터" role="tablist" hidden>${filters.map(([key,label],index)=>`<button type="button" id="filter-${key}" role="tab" aria-controls="archive-results" aria-selected="${index===0}" tabindex="${index===0?0:-1}" data-filter="${key}">${label}<span>${posts.filter(p=>key==='all'||p.series===key).length}</span></button>`).join('')}</nav>
 <div id="archive-results" role="tabpanel" aria-labelledby="filter-all" tabindex="0"><section class="archive-list" id="archive-list" aria-live="polite">${posts.map(archiveCard).join('')}</section><div class="archive-empty" id="archive-empty"${posts.length?' hidden':''}><h2>이 시리즈의 글을 준비하고 있습니다.</h2><p>다른 시리즈에서 먼저 글을 만나보세요.</p></div></div><button class="load-more" id="load-more" type="button" hidden>글 더 보기 <span aria-hidden="true">↓</span></button></main>${pages.footer()}</body></html>`;
 }
@@ -247,7 +247,7 @@ function rss(posts) {
 
 function homePage(posts) {
   const source = fs.readFileSync(path.join(ROOT,'index.html'),'utf8');
-  const cards = posts.slice(0,3).map((post,i)=>`<a class="home-post" href="${post.url}"><span class="home-post-number">${String(i+1).padStart(2,'0')}</span><div><span class="eyebrow">${esc(post.series_label)}</span><h3>${esc(post.title)}</h3><p>${esc(post.excerpt)}</p><div class="home-post-meta"><time datetime="${post.date}">${post.date.replaceAll('-','.')}</time><span>${esc(post.read_time)}</span></div></div><span class="home-post-arrow" aria-hidden="true">↗</span></a>`).join('');
+  const cards = posts.slice(0,3).map((post,i)=>`<a class="home-post" data-motion="row" href="${post.url}"><span class="home-post-number">${String(i+1).padStart(2,'0')}</span><div><span class="eyebrow">${esc(post.series_label)}</span><h3>${esc(post.title)}</h3><p>${esc(post.excerpt)}</p><div class="home-post-meta"><time datetime="${post.date}">${post.date.replaceAll('-','.')}</time><span>${esc(post.read_time)}</span></div></div><span class="home-post-arrow" aria-hidden="true">↗</span></a>`).join('');
   return source.replace('<!--SITE_HEAD-->',pageHead({title:'AFTER THE NUMBERS — 제조업 경영분석 & FP&A',description:'숫자 뒤의 변화를 읽고, 다음 판단으로 연결합니다. 제조업 경영분석·손익·원가·Rolling Forecast의 실무를 기록합니다.',canonical:SITE_URL+'/'})).replace('<!--SITE_HEADER-->',pages.header()).replace('<!--SITE_FOOTER-->',pages.footer()).replace('<!--CASE_CARDS-->',pages.caseCards()).replace('<!--HOME_POSTS-->',cards || '<p>첫 번째 글을 준비하고 있습니다.</p>');
 }
 
@@ -297,7 +297,7 @@ function build() {
     url: post.url
   }));
 
-  ['styles.css', 'script.js', 'article.css', 'article.js', 'writing.css', 'writing-archive.js', 'favicon.svg', '404.html', '_headers', '_redirects', 'admin', 'uploads'].forEach(copy);
+  ['styles.css', 'script.js', 'motion.css', 'motion.js', 'article.css', 'article.js', 'writing.css', 'writing-archive.js', 'favicon.svg', '404.html', '_headers', '_redirects', 'admin', 'uploads'].forEach(copy);
   write('index.html', homePage(posts));
   for (const item of pages.cases) {
     const canonical = `${SITE_URL}/cases/${item.slug}/`;

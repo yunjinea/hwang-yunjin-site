@@ -1,20 +1,26 @@
-# VERSION 3.0 — Editorial Rebuild
+# v3.1 — 2026-09-10
 
-Baseline: user-supplied after-the-numbers-v2.3-full-source.zip
-Date: 2026-09-09
+기준: v2.3 원본에서 개편한 v3.0.
 
-## Changes
-- Replaced accumulated homepage CSS and JavaScript with one responsive layout and explicit controls.
-- Restored ordinary document scrolling; removed wheel/swipe-driven content replacement and pinned chapters.
-- Home order: Intro → Cases → Latest Writing → Experience/Expertise → Contact.
-- Four independently addressable case study pages under /cases/.
-- Forecast stage tabs work by click and keyboard; every stage remains readable without JavaScript.
-- Latest writing is rendered at build time; no fetch is required to see published posts.
-- Shared navigation, typography, color tokens and footer across home, cases, archive and articles.
-- Larger article type and figures constrained to the reading column.
-- READ / DECIDE / CONTROL filters with clear empty states and working pagination.
-- Preserved existing post URLs, both Markdown post sources and CMS configuration.
-- Included new cases in sitemap and strengthened build validation for internal anchors.
+## 변경 사항
 
-## Validation
-See README.md for the checks completed and the remaining device/CMS verification limits.
+- 네이비 대표 사례 + 3개 사례 카드의 구성으로 홈의 시각적 강약 개선.
+- 모바일 사례 SVG 복원, 사례별 의미를 담은 모션 추가.
+- 브랜드 등장, 실적·전망 선, 제목·글 목록 등장, 경력 연결선 적용.
+- 기본 링크를 사용하는 문서 간 전환, 모바일 메뉴·터치 반응 적용.
+- 모션을 `motion.js`, `motion.css`로 분리하고 공통 빌드에 연결.
+- 공개 글 두 편과 도식, 관리자 설정은 v3.0과 바이트 단위로 동일.
+
+## 검증
+
+- Node.js 빌드 및 모든 애플리케이션 JS 구문 확인.
+- 생성된 페이지·내부 링크·앵커·중복 ID 확인.
+- CSS 구분자, SVG 마스크 참조·접근 가능한 설명 확인.
+- 모바일 1열 규칙, 표시되는 그래프, 고유한 전환 이름 확인.
+- 모의 Web API 환경: 미지원·동작 줄이기·화면 진입 후 1회 재생·설정 변경·복원·키보드 포커스 확인.
+- 실제 브라우저/휴대폰 모션, CMS 로그인, 공개 배포 미검증.
+
+## 패키지
+
+- 전체 소스: 운영 소스·콘텐츠·문서·빌드 결과를 포함.
+- GitHub 업데이트: v3.0에 덮어쓸 변경분만 포함. 원문·업로드 폴더를 덮어쓰지 않음.
