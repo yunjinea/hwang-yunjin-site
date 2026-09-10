@@ -3,6 +3,7 @@ const cards = [...document.querySelectorAll('.archive-card')];
 const emptyState = document.getElementById('archive-empty');
 const loadMore = document.getElementById('load-more');
 const PAGE_SIZE = 10;
+document.querySelector('.archive-filters')?.removeAttribute('hidden');
 let activeFilter = 'all';
 let visibleCount = PAGE_SIZE;
 
@@ -23,6 +24,7 @@ function renderArchive({ updateUrl = true } = {}) {
     button.setAttribute('aria-selected', String(active));
     button.tabIndex = active ? 0 : -1;
   });
+  document.getElementById('archive-results')?.setAttribute('aria-labelledby', `filter-${activeFilter}`);
   if (emptyState) emptyState.hidden = matches.length > 0;
   if (loadMore) loadMore.hidden = matches.length <= visibleCount;
   if (updateUrl) {
