@@ -1,20 +1,16 @@
 ---
-title: "재고가 늘면 왜 이익이 좋아 보일까"
-short_title: "이익이 늘어난 달, 창고에 남은 것"
-date: "2026-09-10"
-series: "read"
-category: "read"
-series_label: "READ / 03 · INVENTORY & PROFIT"
-category_label: "READ / 03 · INVENTORY & PROFIT"
+title: 재고가 늘면 왜 이익이 좋아 보일까
+short_title: 이익이 늘어난 달, 창고에 남은 것
+date: 2026-09-10
+series: see
+series_label: READ / 03 · INVENTORY & PROFIT
 article_index: "03"
-read_time: "7 MIN READ"
-summary: "판매는 그대로인데 이익이 늘었다. 창고에 남은 제품을 따라가 보니, 다음 달에는 같은 금액만큼 이익이 줄었다."
-excerpt: "생산을 늘려 얻은 이익을 원가 절감 실적으로 잡아도 될까요. 한 공장의 두 달을 따라가며 재고와 성과평가의 관계를 살펴봅니다."
-draft: true
-featured_image: ""
-slug: "inventory-profit-illusion"
+read_time: 7 MIN READ
+summary: 판매는 그대로인데 이익이 늘었다. 창고에 남은 제품을 따라가 보니, 다음 달에는 같은 금액만큼 이익이 줄었다.
+excerpt: 생산을 늘려 얻은 이익을 원가 절감 실적으로 잡아도 될까요. 한 공장의 두 달을 따라가며 재고와 성과평가의 관계를 살펴봅니다.
+slug: inventory-profit-illusion
+draft: false
 ---
-
 판매는 계획대로였는데 이익이 더 났다. 생산량은 계획을 넘었고, 창고에는 제품이 쌓였다. 실적보고서에는 ‘생산 증가에 따른 원가 개선’이라고 적혀 있다.
 
 이런 보고를 받으면 다음 달에도 개선된 원가를 적용하고 싶어진다. 생산을 늘린 효과가 확인됐으니 같은 수준으로 가동하면 될 것 같다. 다만 이번 달 팔지 못한 제품이 이미 창고에 있다. 다음 달에도 계속 더 만들 수 있을까.
